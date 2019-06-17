@@ -1,8 +1,6 @@
-package cn.edu.gzmu.authserver.system.user;
+package cn.edu.gzmu.authserver.model.entity;
 
 import cn.edu.gzmu.authserver.base.BaseEntity;
-import cn.edu.gzmu.authserver.student.Student;
-import cn.edu.gzmu.authserver.teacher.Teacher;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

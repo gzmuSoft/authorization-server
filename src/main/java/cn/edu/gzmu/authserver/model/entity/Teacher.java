@@ -1,4 +1,4 @@
-package cn.edu.gzmu.authserver.teacher;
+package cn.edu.gzmu.authserver.model.entity;
 
 import cn.edu.gzmu.authserver.base.BaseEntity;
 import lombok.Data;
