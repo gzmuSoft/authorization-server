@@ -1,4 +1,4 @@
-package cn.edu.gzmu.authserver;
+package cn.edu.gzmu.authserver.model.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,12 +16,8 @@ import org.springframework.stereotype.Component;
 public class Oauth2Properties {
 
     /**
-     * 重要！！！jwt签名密钥，不可公开！
-     */
-    private String jwtSigningKey;
-
-    /**
      * token 有效期， 分钟为单位
      */
     private Long accessTokenValiditySeconds = 30L;
+
 }

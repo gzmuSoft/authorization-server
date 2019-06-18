@@ -1,6 +1,6 @@
 package cn.edu.gzmu.authserver.config;
 
-import cn.edu.gzmu.authserver.Oauth2Properties;
+import cn.edu.gzmu.authserver.model.properties.Oauth2Properties;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -43,4 +43,15 @@ public interface SysUserRepository extends BaseRepository<SysUser, Long> {
      */
     Optional<SysUser> findFirstByEmail(String email);
 
+    /**
+     * 通过用户名、手机号、邮箱号查询用户，并非模糊查询。
+     * 每次获取均需要通过非空判断。
+     *
+     * @param name 用户名
+     * @param phone 手机号
+     * @param email 邮箱号
+     * @return 结果
+     */
+    Optional<SysUser> findFirstByNameOrPhoneOrEmail(String name, String phone, String email);
+
 }

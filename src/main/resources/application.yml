@@ -9,8 +9,40 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     open-in-view: true
-
+    show-sql: true
+  mail:
+    host: smtp.exmail.qq.com
+    port: 465
+    username: lessonCloud@japoul.cn
+    password: lessonC2019
+    properties:
+      mail:
+        debug: false
+        smtp:
+          auth: true
+          starttls:
+            required: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+    test-connection: false
+  redis:
+    host: 127.0.0.1
+    password:
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 application:
   security:
     access-token-validity-seconds: 60
-    jwt-signing-key: 123456
+  message:
+    app-id: 35223
+    app-key: e7eede1811867421882df861a20ed26e
+    action-template: RhXa
+
+logging:
+  level:
+    org:
+      springframework:
+        security: debug
