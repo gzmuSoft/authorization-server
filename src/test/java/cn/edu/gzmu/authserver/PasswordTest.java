@@ -1,7 +1,6 @@
 package cn.edu.gzmu.authserver;
 
-import org.junit.Test;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
@@ -9,9 +8,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * @version 1.0.0
  * @date 19-6-11 下午5:42
  */
-public class PasswordTest {
+class PasswordTest {
     @Test
-    public void password() {
+    void password() {
         System.out.println(new BCryptPasswordEncoder().encode("secret"));
+        System.out.println(new BCryptPasswordEncoder().encode("123456"));
     }
 }

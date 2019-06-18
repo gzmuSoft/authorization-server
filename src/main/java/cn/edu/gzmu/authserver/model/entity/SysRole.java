@@ -8,9 +8,14 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author echo
@@ -18,11 +23,11 @@ import java.io.Serializable;
  * @date 19-6-11 下午5:27
  */
 @Data
-@ToString(callSuper = true)
 @Table(name = "sys_role")
 @Entity(name = "sys_role")
 @Where(clause = "is_enable = 1")
-@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true, exclude = "users")
+@EqualsAndHashCode(callSuper = true, exclude = "users")
 @Accessors(chain = true)
 public class SysRole extends BaseEntity implements Serializable {
 
@@ -43,4 +48,8 @@ public class SysRole extends BaseEntity implements Serializable {
      */
     @javax.validation.constraints.NotNull(message = "parentId 父角色编号 为必填项")
     private java.lang.Long parentId;
+
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
+    private Set<SysUser> users = new HashSet<>();
+
 }

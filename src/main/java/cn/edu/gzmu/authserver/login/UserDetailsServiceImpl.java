@@ -1,4 +1,4 @@
-package cn.edu.gzmu.authserver.config;
+package cn.edu.gzmu.authserver.login;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

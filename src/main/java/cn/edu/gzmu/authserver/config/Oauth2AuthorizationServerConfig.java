@@ -51,7 +51,7 @@ public class Oauth2AuthorizationServerConfig extends AuthorizationServerConfigur
     }
 
     /**
-     * 配置框架应用上述实现
+     * 配置应用上述实现
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {

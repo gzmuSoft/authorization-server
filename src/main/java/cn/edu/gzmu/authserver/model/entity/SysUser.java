@@ -7,11 +7,11 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author echo
@@ -19,11 +19,11 @@ import java.io.Serializable;
  * @date 19-6-11 下午5:26
  */
 @Data
-@ToString(callSuper = true)
 @Table(name = "sys_user")
 @Entity(name = "sys_user")
 @Where(clause = "is_enable = 1")
-@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true, exclude = "roles")
+@EqualsAndHashCode(callSuper = true, exclude = "roles")
 @Accessors(chain = true)
 public class SysUser extends BaseEntity implements Serializable {
 
@@ -88,4 +88,10 @@ public class SysUser extends BaseEntity implements Serializable {
      */
     @Transient
     private Teacher teacher;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "sys_user_role", joinColumns = @JoinColumn(name = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "roleId"))
+    private Set<SysRole> roles = new HashSet<>();
+
 }
