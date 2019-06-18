@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `oauth_client_details`;
 create table oauth_client_details
 (
     client_id               VARCHAR(256) PRIMARY KEY,
@@ -13,6 +14,7 @@ create table oauth_client_details
     autoapprove             VARCHAR(256)
 );
 
+DROP TABLE IF EXISTS `oauth_client_token`;
 create table oauth_client_token
 (
     token_id          VARCHAR(256),
@@ -22,6 +24,7 @@ create table oauth_client_token
     client_id         VARCHAR(256)
 );
 
+DROP TABLE IF EXISTS `oauth_access_token`;
 create table oauth_access_token
 (
     token_id          VARCHAR(256),
@@ -33,6 +36,7 @@ create table oauth_access_token
     refresh_token     VARCHAR(256)
 );
 
+DROP TABLE IF EXISTS `oauth_refresh_token`;
 create table oauth_refresh_token
 (
     token_id       VARCHAR(256),
@@ -40,12 +44,14 @@ create table oauth_refresh_token
     authentication BLOB
 );
 
+DROP TABLE IF EXISTS `oauth_code`;
 create table oauth_code
 (
     code           VARCHAR(256),
     authentication BLOB
 );
 
+DROP TABLE IF EXISTS `oauth_approvals`;
 create table oauth_approvals
 (
     userId         VARCHAR(256),
@@ -56,6 +62,7 @@ create table oauth_approvals
     lastModifiedAt TIMESTAMP
 );
 
+DROP TABLE IF EXISTS `ClientDetails`;
 create table ClientDetails
 (
     appId                  VARCHAR(256) PRIMARY KEY,
@@ -71,6 +78,7 @@ create table ClientDetails
     autoApproveScopes      VARCHAR(256)
 );
 
+DROP TABLE IF EXISTS `student`;
 CREATE TABLE `student`
 (
     `id`                   bigint(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
@@ -104,6 +112,7 @@ CREATE TABLE `student`
   DEFAULT CHARSET = utf8
   ROW_FORMAT = DYNAMIC COMMENT ='学生信息表';
 
+DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`
 (
     `id`          bigint(20)                                              NOT NULL AUTO_INCREMENT COMMENT '编号',
@@ -125,6 +134,7 @@ CREATE TABLE `sys_role`
   DEFAULT CHARSET = utf8
   ROW_FORMAT = DYNAMIC COMMENT ='系统角色表';
 
+DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`
 (
     `id`            bigint(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
@@ -155,6 +165,7 @@ CREATE TABLE `sys_user`
   DEFAULT CHARSET = utf8
   ROW_FORMAT = DYNAMIC COMMENT ='系统用户表';
 
+DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`
 (
     `id`          bigint(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
@@ -179,6 +190,7 @@ CREATE TABLE `sys_user_role`
   DEFAULT CHARSET = utf8
   ROW_FORMAT = DYNAMIC COMMENT ='用户角色关联';
 
+DROP TABLE IF EXISTS `teacher`;
 CREATE TABLE `teacher`
 (
     `id`                   bigint(20) NOT NULL AUTO_INCREMENT COMMENT '编号',
@@ -216,3 +228,25 @@ CREATE TABLE `teacher`
   DEFAULT CHARSET = utf8
   ROW_FORMAT = DYNAMIC COMMENT ='教师信息表';
 
+DROP TABLE IF EXISTS `sys_data`;
+CREATE TABLE `sys_data`
+(
+    `id`          bigint(20)                                               NOT NULL AUTO_INCREMENT COMMENT '编号',
+    `name`        varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci   NOT NULL COMMENT '名称',
+    `spell`       varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci  NULL     DEFAULT NULL COMMENT '名称的全拼',
+    `parent_id`   bigint(20)                                               NULL     DEFAULT 0 COMMENT '0，代表无上级，即：学校',
+    `brief`       varchar(2048) CHARACTER SET utf8 COLLATE utf8_general_ci NULL     DEFAULT NULL COMMENT '简介',
+    `type`        tinyint(4)                                               NULL     DEFAULT 0 COMMENT '0：学校，1：学院，2：系部，3：专业，4：班级，5：性别，6：学历，7：学位，8：教师毕业专业，9：民族，10：研究方向，11：职称',
+    `sort`        smallint(6)                                              NULL     DEFAULT 1 COMMENT '同一type数据（如：学校）的排序顺序，值大于等于1',
+    `create_user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci  NULL     DEFAULT NULL COMMENT '创建用户名称',
+    `create_time` datetime(0)                                              NULL     DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建日期',
+    `modify_user` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci  NULL     DEFAULT NULL COMMENT '末次更新用户名称',
+    `modify_time` datetime(0)                                              NULL     DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '末次更新时间',
+    `remark`      varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci  NULL     DEFAULT NULL COMMENT '备注',
+    `is_enable`   binary(1)                                                NOT NULL DEFAULT 1 COMMENT '是否可用，1：可用，0：不可用',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  CHARACTER SET = utf8
+  COLLATE = utf8_general_ci COMMENT = '系统基本数据表'
+  ROW_FORMAT = Dynamic;
