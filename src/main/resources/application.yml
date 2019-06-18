@@ -9,3 +9,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     open-in-view: true
+
+application:
+  security:
+    access-token-validity-seconds: 60
+    jwt-signing-key: 123456
