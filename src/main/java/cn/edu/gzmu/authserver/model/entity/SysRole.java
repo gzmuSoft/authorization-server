@@ -1,6 +1,7 @@
 package cn.edu.gzmu.authserver.model.entity;
 
 import cn.edu.gzmu.authserver.base.BaseEntity;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -49,6 +50,7 @@ public class SysRole extends BaseEntity implements Serializable {
     @javax.validation.constraints.NotNull(message = "parentId 父角色编号 为必填项")
     private java.lang.Long parentId;
 
+    @JSONField(serialize = false)
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<SysUser> users = new HashSet<>();
 

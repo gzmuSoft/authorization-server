@@ -7,9 +7,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -17,7 +23,10 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * token 配置
@@ -30,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 public class AuthTokenStore {
     private final @NonNull DataSource dataSource;
     private final @NonNull Oauth2Properties oauth2Properties;
+    private final @NonNull TokenEnhancer authTokenEnhancer;
 
     /**
      * TokenServices
@@ -43,6 +53,7 @@ public class AuthTokenStore {
         defaultTokenServices.setTokenStore(jwtTokenStore());
         defaultTokenServices.setSupportRefreshToken(true);
         defaultTokenServices.setClientDetailsService(clientDetails());
+        defaultTokenServices.setTokenEnhancer(authTokenEnhancer);
         defaultTokenServices.setAccessTokenValiditySeconds((int)
                 TimeUnit.MINUTES.toSeconds(oauth2Properties.getAccessTokenValiditySeconds()));
         return defaultTokenServices;

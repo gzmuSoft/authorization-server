@@ -1,6 +1,7 @@
 package cn.edu.gzmu.authserver.model.entity;
 
 import cn.edu.gzmu.authserver.base.BaseEntity;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -40,6 +41,7 @@ public class SysUser extends BaseEntity implements Serializable {
     /**
      * 密码
      */
+    @JSONField(serialize = false)
     @javax.validation.constraints.NotNull(message = "pwd 密码 为必填项")
     @Size(max = 255, message = "pwd 不能大于 255 位")
     @com.fasterxml.jackson.annotation.JsonIgnore
@@ -89,6 +91,7 @@ public class SysUser extends BaseEntity implements Serializable {
     @Transient
     private Teacher teacher;
 
+    @JSONField(serialize = false)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "sys_user_role", joinColumns = @JoinColumn(name = "userId"),
             inverseJoinColumns = @JoinColumn(name = "roleId"))

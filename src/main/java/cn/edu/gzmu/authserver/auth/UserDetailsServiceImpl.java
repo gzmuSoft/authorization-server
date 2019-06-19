@@ -69,7 +69,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, SmsUserDetail
      * @throws ResourceNotFoundException sms 未找到异常
      */
     @Override
-    public UserDetails loadUserBySms(String sms) throws ResourceNotFoundException {
+    public UserDetails loadUserBySms(String sms) {
         log.debug("sms login user: {}", sms);
         return loadUser(() -> sysUserRepository.findFirstByPhone(sms));
     }
@@ -81,7 +81,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, SmsUserDetail
      * @return 用户
      */
     private User loadUser(Supplier<Optional<SysUser>> load) {
-        SysUser sysUser = load.get().orElseThrow(() -> new ResourceNotFoundException("用户 %s 不存在"));
+        SysUser sysUser = load.get().orElseThrow(() -> new UsernameNotFoundException("用户 %s 不存在"));
         Set<SysRole> sysRoles = sysUser.getRoles();
         List<SimpleGrantedAuthority> authorities = sysRoles.stream()
                 .map(sysRole -> new SimpleGrantedAuthority(sysRole.getName()))
