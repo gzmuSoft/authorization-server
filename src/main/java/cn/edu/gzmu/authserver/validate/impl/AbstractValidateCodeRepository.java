@@ -3,11 +3,8 @@ package cn.edu.gzmu.authserver.validate.impl;
 import cn.edu.gzmu.authserver.model.constant.ValidateCodeType;
 import cn.edu.gzmu.authserver.validate.ValidateCode;
 import cn.edu.gzmu.authserver.validate.ValidateCodeRepository;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.util.concurrent.TimeUnit;
@@ -21,7 +18,6 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class AbstractValidateCodeRepository implements ValidateCodeRepository {
 
-    @Getter
     @Autowired
     private RedisTemplate<String, ValidateCode> redisTemplate;
 
@@ -38,14 +34,6 @@ public abstract class AbstractValidateCodeRepository implements ValidateCodeRepo
     @Override
     public void remove(ServletWebRequest request, ValidateCodeType type) {
         redisTemplate.delete(buildKey(request, type));
-    }
-
-    @Autowired(required = false)
-    public void setRedisTemplate(RedisTemplate<String, ValidateCode> redisTemplate) {
-        RedisSerializer stringSerializer = new StringRedisSerializer();
-        redisTemplate.setKeySerializer(stringSerializer);
-        redisTemplate.setHashKeySerializer(stringSerializer);
-        this.redisTemplate = redisTemplate;
     }
 
     /**

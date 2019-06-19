@@ -80,7 +80,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode>
         ValidateCodeRepository validateRepository = validateCodeRepositoryMap.get(repositoryName);
         C code = (C) validateRepository.get(request, validateCodeType);
         if (code == null){
-            throw new ValidateCodeException("获取验证码失败，请检查邮箱号是否正确或重新发送！");
+            throw new ValidateCodeException("获取验证码失败，请检查输入是否正确或重新发送！");
         }
         if (!StringUtils.equalsIgnoreCase(code.getCode(), request.getHeader(CODE))) {
             throw new ValidateCodeException("验证码不正确，请重新输入！");
