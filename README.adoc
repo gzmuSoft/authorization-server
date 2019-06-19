@@ -1,0 +1,429 @@
+
+= authorization-server
+Doc Writer <doc.writer@asciidoctor.org>
+v1.0, 2019-06-19
+:toc:
+
+== 简述
+
+很久以前就想让资源服务器、授权服务器、客户端完全分离的，年初的时候尝试过，但是由于那个时候能力有限，所以失败很多次，后来在考试系统项目初期，也再次尝试，可惜的是依旧失败，那时候真的很菜，不得已暂时将他们放在一个应用之中。最近由于毕业设计的需求的原因，再次需要将授权服务器分离，原本在 https://github.com/gzmuSoft/lesson-cloud[lesson-cloud] 系统内的授权服务器，现在将它独立出来，作为一个单独的应用授权服务器进行使用。花了大概一天的时间完成整个移植过程，觉得自己进步了很多。
+
+目前授权服务器内置我校的 6 张数据表，包括
+
+- `sys_user` 用户表
+- `sys_role` 角色表
+- `sys_user_role` 用户角色关联表
+- `sys_data` 数据表
+- `student` 学生信息表
+- `teacher` 教师表
+
+这几张表包括了整个用户的授权信息，同时对于 `OAuth2` 的令牌信息，使用 `mysql` 数据进行存储，表结构来自于 https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql[github] ，主要有如下 7 张表
+
+- `oauth_access_token` 生成的token
+- `oauth_client_details` 客户端信息
+- `oauth_code` 生成的授权码
+- `oauth_refresh_token` 刷新token
+- `oauth_approvals` 授权记录
+- `ClientDetails` 定制客户端信息，暂时先用官方给的不去自定义。
+
+=== 任务
+
+贵州民族大学授权服务器，专门用来为我校应用提供授权服务，使用 spring security oauth 进行完成，完成进度：
+
+- [x] 基本授权模式：密码认证
+- [x] 手机验证码认证授权
+- [x] 手机/邮箱验证码注册
+- [x] 多应用认证授权服务器
+- [x] jwt 信息加密
+- [ ] jwt 信息认证完整性填充
+- [ ] SSO 认证授权服务器
+- [ ] 单元测试完善
+- [ ] 微服务注册
+- [ ] 高并发处理
+
+=== 授权服务器
+
+授权服务器的示例参见 https://github.com/gzmuSoft/resource-server[resource-server] 项目，他演示了一个简单的授权服务器的搭建。
+
+== 技术选型
+- 构建工具： gradle 5
+- 授权协议： OAuth2
+- 核心框架： spring security oauth
+- 数据缓存： redis 5
+- 邮件模板： thymeleaf
+- 应用监控： actuator + druid
+- 单元测试： junit 5
+- 数据库： jpa + mysql 8
+
+
+== 基本认证授权
+
+对于认证我们暂时提供两种认证方式，一种 `密码认证`，另外一种 `手机验证码` 认证方式。授权码模式待测试，提供以下端点：
+
+- `/code/sms` 获取手机验证码端点。
+- `/oauth/sms` 手机验证码认证端点。
+- `/oauth/token` 授权模式、密码认证 与 刷新令牌 端点。
+- `/oauth/authorize` 授权码模式授权端点。
+- `/oauth/confirm_access` 用户确认授权提交端点。
+- `/oauth/error` 授权服务错误信息端点。
+- `/oauth/check_token` 用于资源服务访问的令牌解析端点。
+- `/oauth/token_key` 提供公有密匙的端点，使用JWT令牌。
+
+
+=== 密码认证
+
+使用 spring security oauth2 提供的默认密码登录即可，请求接口如下：
+
+- 请求路径：`/oauth/token`
+- 请求方法： POST
+- 请求头：
+
+[cols="1,4,2", options="header"]
+.请求头
+|===
+|参数 |值 | 描述
+|Authorization
+|Basic bGVzc29uLWNsb3VkOmxlc3Nvbi1jbG91ZC1zZWNyZXQ=
+|来自于 oauth client id 和 client secret base64 加密
+|===
+
+- 请求参数：
+
+[cols="1,1,2", options="header"]
+.请求参数
+|===
+|参数 |值 | 描述
+
+|grant_type
+|password
+|请求类型
+
+|scope
+|all
+|请求权限域
+
+|username
+|-
+|用户名
+
+|password
+|-
+|密码
+|===
+
+- 正确响应：
+
+[cols="1,1", options="header"]
+.正确响应
+|===
+|属性 | 描述
+
+|access_token
+|jwt 加密后令牌
+
+|token_type
+|令牌类型，默认 bearer
+
+|refresh_token
+|用来刷新的令牌
+
+|expires_in
+|有效期
+
+|scope
+|请求域，默认 all
+
+|jti
+|JWT ID
+|===
+
+- 错误响应
+
+[cols="1,2,2,2", options="header"]
+.错误响应
+|===
+|状态码 |错误原因 |  错误(error) | 错误信息(error_message)
+
+| 401
+| 请求头中不含有 Authorization 属性
+| unauthorized
+| Full authentication is required to access this resource
+
+| 400
+| grant_type 参数错误
+| unsupported_grant_type
+| Unsupported grant type: ...
+
+| 400
+| scope 参数错误
+| invalid_scope
+| Invalid scope:...
+
+| 400
+| 用户名或密码错误
+| invalid_grant
+| 用户名或密码错误
+|===
+
+这里原理我就不介绍了，是由 spring security oauth2 实现的，有兴趣可以去看看源码。他的核心是 `org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter` 这个过滤器。
+
+=== 手机验证码认证
+
+手机验证码认证分为两步，第一步为下发验证码，第二步为携带验证码和手机号请求认证。
+
+==== 获取验证码
+
+由于目前没有真正的手机提供商，所以我不会真正的发短信，但是会默认短信验证码为 1234 并存储到 redis 之中。
+
+- 请求路径：`/code/sms`
+- 请求方式： GET
+- 请求头：
+
+[cols="1,1,2", options="header"]
+.请求头
+|===
+|参数 |值 | 描述
+|sms
+|-
+|手机号
+|===
+
+- 请求参数： 无
+- 正确响应：
+
+[cols="1,1", options="header"]
+.正确响应
+|===
+|状态码  |  响应体
+
+| 200
+| 无
+|===
+
+- 错误响应：
+
+[cols="1,2,2,2", options="header"]
+.错误响应
+|===
+|状态码 |错误原因 |  错误(error) | 错误信息(error_message)
+
+| 401
+| 请求头中不含有 sms 属性
+| unauthorized
+| 请求中不存在设备号
+|===
+
+==== 手机认证
+
+- 请求路径：`/oauth/sms`
+- 请求方式： POST
+- 请求头：
+
+[cols="1,4,2", options="header"]
+.请求头
+|===
+|参数 |值 | 描述
+|Authorization
+|Basic bGVzc29uLWNsb3VkOmxlc3Nvbi1jbG91ZC1zZWNyZXQ=
+|来自于 oauth client id 和 client secret base64 加密
+
+| sms
+| -
+| 手机号
+
+| code
+| -
+| 验证码
+|===
+
+- 正确响应：
+
+[cols="1,1", options="header"]
+.正确响应
+|===
+|属性 | 描述
+
+|access_token
+|jwt 加密后令牌
+
+|token_type
+|令牌类型，默认 bearer
+
+|refresh_token
+|用来刷新的令牌
+
+|expires_in
+|有效期
+
+|scope
+|请求域，默认 all
+
+|jti
+|JWT ID
+|===
+
+- 错误响应： 待封装
+
+[cols="1,3,3,3", options="header"]
+.错误响应
+|===
+|状态码 |错误原因 |  错误(error) | 错误信息(error_message)
+
+| 400
+| 请求体中不含有 sms 属性或者验证码验证失败
+| 获取验证码失败，请重新发送
+| 获取验证码失败，请重新发送
+
+| 400
+| 请求头中不含有 sms 属性
+| 请求中不存在设备号
+| 请求中不存在设备号
+|===
+
+==== 原理
+
+获取手机验证码主要在 `cn.edu.gzmu.authserver.validate.sms` 下，具体请参见 `cn/edu/gzmu/authserver/validate/package-info.java`
+
+手机验证主要在 `cn.edu.gzmu.authserver.auth.sms`，具体请参见 `cn/edu/gzmu/authserver/auth/sms/package-info.java`
+
+=== 刷新令牌
+- 请求路径：`/oauth/token`
+- 请求方式： POST
+- 请求头：
+
+[cols="1,4,2", options="header"]
+.请求头
+|===
+|参数 |值 | 描述
+|Authorization
+|Basic bGVzc29uLWNsb3VkOmxlc3Nvbi1jbG91ZC1zZWNyZXQ=
+|来自于 oauth client id 和 client secret base64 加密
+|===
+
+- 请求体：
+
+[cols="1,4,2", options="header"]
+.请求头
+|===
+|参数 |值 | 描述
+|grant_type
+|refresh_token
+|刷新验证码
+
+
+|refresh_token
+|-
+|获取 token 时候得到的 refresh_token
+|===
+
+- 正确响应：
+
+
+[cols="1,1", options="header"]
+.正确响应
+|===
+|属性 | 描述
+
+|access_token
+|jwt 加密后令牌
+
+|token_type
+|令牌类型，默认 bearer
+
+|refresh_token
+|用来刷新的令牌
+
+|expires_in
+|有效期
+
+|scope
+|请求域，默认 all
+
+|jti
+|JWT ID
+|===
+
+- 错误响应：
+
+[cols="1,2,2,2", options="header"]
+.错误响应
+|===
+|状态码 |错误原因 |  错误(error) | 错误信息(error_message)
+
+| 401
+| 请求头中不含有 Authorization 属性
+| unauthorized
+| Full authentication is required to access this resource
+
+| 400
+| grant_type 参数错误
+| unsupported_grant_type
+| Unsupported grant type: ...
+
+
+| 400
+| refresh_token 不合法
+| invalid_grant
+| Invalid refresh token:...
+|===
+
+
+=== 检查 token 信息
+
+- 请求路径：`/oauth/check_token`
+- 请求方式： POST
+- 请求头：
+
+[cols="1,4,2", options="header"]
+.请求头
+|===
+|参数 |值 | 描述
+|Authorization
+|Basic bGVzc29uLWNsb3VkOmxlc3Nvbi1jbG91ZC1zZWNyZXQ=
+|来自于 oauth client id 和 client secret base64 加密
+|===
+
+- 请求体：
+
+[cols="1,4,2", options="header"]
+.请求头
+|===
+|参数 |值 | 描述
+|token
+|-
+|有效的 token
+|===
+
+- 正确响应：
+
+[cols="1,1", options="header"]
+.正确响应
+|===
+|属性 | 描述
+
+|aud
+|授权的资源服务器名称
+
+|user_name
+|用户名
+
+|scope
+|有效的域
+
+|active
+|是否存活
+
+|exp
+|有效期
+
+|authorities
+|授权角色
+
+|jti
+|jwt id
+
+|client_id
+|客户端 id
+
+|===
+
