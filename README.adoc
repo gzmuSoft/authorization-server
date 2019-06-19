@@ -1,6 +1,6 @@
 
 = authorization-server
-Doc Writer <doc.writer@asciidoctor.org>
+Doc Writer EchoCow <https://echocow.cn>
 v1.0, 2019-06-19
 :toc:
 
