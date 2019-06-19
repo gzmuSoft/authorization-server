@@ -34,12 +34,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .apply(smsAuthenticationSecurityConfig);
 
 
-        http.csrf()
-            .disable()
-            .authorizeRequests()
-            .and()
+        http
                 .authorizeRequests()
-                .antMatchers("/oauth/sms").permitAll();
+                .antMatchers("/oauth/sms").permitAll()
+//                .antMatchers("/druid/**").permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .csrf()
+                .disable();
     }
 
     /**
