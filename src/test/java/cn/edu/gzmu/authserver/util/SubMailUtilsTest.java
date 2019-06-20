@@ -15,18 +15,19 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  */
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
+@DisplayName(":iphone: 手机短信测试")
 class SubMailUtilsTest {
 
     @Autowired
     private SubMailUtils subMailUtils;
 
     @Test
-    @DisplayName("\uD83D\uDCF1 手机短信测试")
+    @DisplayName(":iphone: 向指定手机号发送一条短信")
     void application() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("action", "登录");
         jsonObject.put("code", "123456");
         jsonObject.put("time", "123");
-        subMailUtils.sendActionMessage("121", jsonObject);
+        subMailUtils.sendActionMessage("13765308262", jsonObject);
     }
 }

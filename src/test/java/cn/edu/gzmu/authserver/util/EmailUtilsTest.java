@@ -20,13 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
+@DisplayName(":email: 邮件测试")
 class EmailUtilsTest {
 
     @Autowired
     private EmailUtils emailUtils;
 
     @Test
-    @DisplayName("\uD83D\uDCE9 邮件发送测试")
+    @DisplayName(":email: 异步的发送一封邮件")
     void application() {
         HashMap<String, Object> values = new HashMap<>();
         values.put("code", RandomCode.random(6, false));
