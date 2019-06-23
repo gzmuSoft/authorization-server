@@ -1,6 +1,7 @@
 package cn.edu.gzmu.authserver.auth;
 
 import cn.edu.gzmu.authserver.model.constant.EntityType;
+import cn.edu.gzmu.authserver.model.entity.SysRole;
 import cn.edu.gzmu.authserver.model.entity.SysUser;
 import cn.edu.gzmu.authserver.repository.StudentRepository;
 import cn.edu.gzmu.authserver.repository.SysUserRepository;
@@ -18,6 +19,7 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -45,7 +47,8 @@ public class AuthTokenEnhancer implements TokenEnhancer {
         additionalInfo.put("user_name", user.getUsername());
         additionalInfo.put("authorities", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
         additionalInfo.put("user_info", JSON.toJSON(sysUser));
-        additionalInfo.put("role_info", JSON.toJSON(userDetails(sysUser)));
+        additionalInfo.put("entity_info", JSON.toJSON(userDetails(sysUser)));
+        additionalInfo.put("role_info", JSON.toJSON(sysUser.getRoles()));
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }
@@ -61,8 +64,10 @@ public class AuthTokenEnhancer implements TokenEnhancer {
             return studentRepository.getOne(sysUser.getEntityId());
         } else if (EntityType.isTeacher(sysUser.getEntityType())) {
             return teacherRepository.getOne(sysUser.getEntityId());
-        } else {
+        } else if (EntityType.isAdmin(sysUser.getEntityType())){
             return "ROLE_ADMIN";
+        } else {
+            return null;
         }
     }
 }
