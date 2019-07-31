@@ -22,7 +22,7 @@ public class SmsCodeProcessor extends AbstractValidateCodeProcessor<ValidateCode
 
     @Override
     protected void send(ServletWebRequest request, ValidateCode validateCode) {
-        smsCodeSender.send(request.getHeader(SecurityConstants.PARAMETER_SMS), validateCode);
+        smsCodeSender.send(request.getParameter(SecurityConstants.GRANT_TYPE_SMS), validateCode);
     }
 
 }

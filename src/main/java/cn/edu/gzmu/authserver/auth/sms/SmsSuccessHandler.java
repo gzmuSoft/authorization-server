@@ -29,12 +29,15 @@ import java.util.UUID;
  *
  * <p>登录成功后，生成用户的 令牌 并返回回去</p>
  *
- * @author echo
+ *
+ * @author <a href="https://echocow.cn">EchoCow</a>
  * @version 1.0
  * @date 19-4-14 10:45
+ * @deprecated 过于复杂的配置方式，标记过时
  */
 @Slf4j
-@Component
+//@Component
+@Deprecated
 @RequiredArgsConstructor
 public class SmsSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -57,7 +60,7 @@ public class SmsSuccessHandler implements AuthenticationSuccessHandler {
         String[] tokens = extractAndDecodeHeader(header);
         assert tokens.length == 2;
         String clientId = tokens[0];
-        String clientSecret = tokens[0];
+        String clientSecret = tokens[1];
 
         // 获取客户端信息
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);

@@ -7,26 +7,28 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
 import java.util.Collection;
 
 /**
- * token配置
+ * token 配置
  *
- * @author echo
+ *
+ * @author <a href="https://echocow.cn">EchoCow</a>
  * @version 1.0
  * @date 19-4-14 15:47
+ * @deprecated 过于复杂的配置方式，标记过时
  */
-@SuppressWarnings("all")
+@Deprecated
 public class SmsAuthenticationToken extends AbstractAuthenticationToken {
 
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
     private final Object principal;
 
-    public SmsAuthenticationToken(Object phone) {
+    SmsAuthenticationToken(Object phone) {
         super(null);
         this.principal = phone;
         setAuthenticated(false);
     }
 
-    public SmsAuthenticationToken(Object principal,  Collection<? extends GrantedAuthority> authorities) {
+    SmsAuthenticationToken(Object principal, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         super.setAuthenticated(true);

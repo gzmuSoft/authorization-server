@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  *
  * 添加过滤器
  *
- * @author echo
+ * @author <a href="https://echocow.cn">EchoCow</a>
  * @version 1.0
  * @date 19-4-14 16:19
  */
@@ -22,11 +22,11 @@ import org.springframework.stereotype.Component;
 public class ValidateCodeSecurityConfig
         extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
-    private final @NonNull ValidateCodeFilter validateCodeFilter;
+    private final @NonNull ValidateCodeGrantTypeFilter validateCodeGrantTypeFilter;
 
     @Override
     public void configure(HttpSecurity http) {
-        http.addFilterBefore(validateCodeFilter,
+        http.addFilterBefore(validateCodeGrantTypeFilter,
                 AbstractPreAuthenticatedProcessingFilter.class);
     }
 }

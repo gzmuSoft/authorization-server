@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.ServletWebRequest;
 
-import javax.xml.bind.ValidationException;
 import java.util.Map;
 
 /**
@@ -20,7 +19,7 @@ import java.util.Map;
  * 抽象 <code>send</code> 方法
  * 具体请参阅每个方法的详细注释
  *
- * @author echo
+ * @author <a href="https://echocow.cn">EchoCow</a>
  * @version 1.0
  * @date 19-4-14 11:37
  */
@@ -30,7 +29,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode>
     private static final String CODE = "code";
 
     @Autowired
-    private Map<String, ValidateCodeRepository> validateCodeRepositoryMap;
+    private ValidateCodeRepository validateCodeRepository;
 
     /**
      * 收集系统中所有的 {@link ValidateCodeGenerator} 接口实现。
@@ -58,11 +57,11 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode>
      * @return 验证码
      */
     @SuppressWarnings("unchecked")
-    private C generate(ServletWebRequest request) throws ValidationException {
+    private C generate(ServletWebRequest request) throws ValidateCodeException {
         String generatorName = getComponentName(ValidateCodeGenerator.class);
         ValidateCodeGenerator validateCodeGenerator = validateCodeGenerators.get(generatorName);
         if (validateCodeGenerator == null) {
-            throw new ValidationException("验证码生成器" + generatorName + "不存在。");
+            throw new ValidateCodeException("验证码生成器" + generatorName + "不存在。");
         }
         return (C) validateCodeGenerator.generate(request);
     }
@@ -75,18 +74,16 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode>
     @Override
     @SuppressWarnings("unchecked")
     public void validate(ServletWebRequest request) {
-        String repositoryName = getComponentName(ValidateCodeRepository.class);
         ValidateCodeType validateCodeType = getValidateCodeType();
-        ValidateCodeRepository validateRepository = validateCodeRepositoryMap.get(repositoryName);
-        C code = (C) validateRepository.get(request, validateCodeType);
-        if (code == null){
+        C code = (C) validateCodeRepository.get(request, validateCodeType);
+        if (code == null) {
             throw new ValidateCodeException("获取验证码失败，请检查输入是否正确或重新发送！");
         }
-        if (!StringUtils.equalsIgnoreCase(code.getCode(), request.getHeader(CODE))) {
+        if (!StringUtils.equalsIgnoreCase(code.getCode(), request.getParameter(CODE))) {
             throw new ValidateCodeException("验证码不正确，请重新输入！");
         }
         // 暂时不清除验证码
-        // validateRepository.remove(request, validateCodeType);
+        // validateCodeRepository.remove(request, validateCodeType);
     }
 
     /**
@@ -96,8 +93,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode>
      * @param validateCode 验证码
      */
     private void save(ServletWebRequest request, C validateCode) {
-        ValidateCodeRepository validateRepository = validateCodeRepositoryMap.get(getComponentName(ValidateCodeRepository.class));
-        validateRepository.save(request, validateCode, getValidateCodeType());
+        validateCodeRepository.save(request, validateCode, getValidateCodeType());
     }
 
     /**
@@ -119,6 +115,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode>
         return ValidateCodeType.valueOf(type.toUpperCase());
     }
 
+    @SuppressWarnings("all")
     private String getComponentName(Class component) {
         return getValidateCodeType().toString().toLowerCase() + component.getSimpleName();
     }

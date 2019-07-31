@@ -1,5 +1,6 @@
 package cn.edu.gzmu.authserver.auth;
 
+import cn.edu.gzmu.authserver.auth.email.EmailUserDetailsService;
 import cn.edu.gzmu.authserver.auth.sms.SmsUserDetailsService;
 import cn.edu.gzmu.authserver.config.Oauth2AuthorizationServerConfig;
 import cn.edu.gzmu.authserver.model.entity.SysRole;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
  * 用户服务，根据不同的策略查询不同的用户。
  * <p>通过实现不同的接口完成认证</p>
  *
- * @author echo
+ * @author <a href="https://echocow.cn">EchoCow</a>
  * @version 1.0
  * @date 19-4-14 10:49
  * @see Oauth2AuthorizationServerConfig
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Component("userDetailsService")
-public class UserDetailsServiceImpl implements UserDetailsService, SmsUserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService, SmsUserDetailsService, EmailUserDetailsService {
 
     private final @NonNull SysUserRepository sysUserRepository;
 
@@ -72,6 +73,24 @@ public class UserDetailsServiceImpl implements UserDetailsService, SmsUserDetail
     public UserDetails loadUserBySms(String sms) {
         log.debug("sms login user: {}", sms);
         return loadUser(() -> sysUserRepository.findFirstByPhone(sms));
+    }
+
+
+    /**
+     * 通过设备号查找用户，这是对设备登录的仅有支持
+     * <p>
+     * 注意，在这里并不会验证密码，sms 登录仅对验证吗进行验证
+     * 具体验证规则见 {@link AbstractValidateCodeProcessor}
+     * 需要修改请继承此类并覆盖其方法
+     *
+     * @param email email 设备号
+     * @return 用户
+     * @throws ResourceNotFoundException sms 未找到异常
+     */
+    @Override
+    public UserDetails loadUserByEmail(String email) throws ResourceNotFoundException {
+        log.debug("email login user: {}", email);
+        return loadUser(() -> sysUserRepository.findFirstByEmail(email));
     }
 
     /**

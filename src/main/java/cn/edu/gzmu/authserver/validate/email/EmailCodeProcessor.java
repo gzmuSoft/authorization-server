@@ -21,6 +21,6 @@ public class EmailCodeProcessor extends AbstractValidateCodeProcessor<ValidateCo
 
     @Override
     protected void send(ServletWebRequest request, ValidateCode validateCode) {
-        mailCodeSender.send(request.getHeader(SecurityConstants.PARAMETER_EMAIL), validateCode);
+        mailCodeSender.send(request.getParameter(SecurityConstants.GRANT_TYPE_EMAIL), validateCode);
     }
 }

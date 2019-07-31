@@ -15,11 +15,14 @@ import org.springframework.stereotype.Component;
 /**
  * sms 授权配置
  *
- * @author echo
+ *
+ * @author <a href="https://echocow.cn">EchoCow</a>
  * @version 1.0
  * @date 19-4-14 16:02
+ * @deprecated 过于复杂的配置方式，标记过时
  */
-@Component
+//@Component
+@Deprecated
 @RequiredArgsConstructor
 public class SmsAuthenticationSecurityConfig
         extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {

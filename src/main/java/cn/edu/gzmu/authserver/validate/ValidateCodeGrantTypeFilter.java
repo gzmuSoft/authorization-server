@@ -7,10 +7,11 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.oauth2.common.util.OAuth2Utils;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
 
 /**
  * 验证码过滤器。
@@ -32,42 +33,44 @@ import java.util.Set;
  * @author <a href="https://echocow.cn">EchoCow</a>
  * @version 1.0
  * @date 19-4-14 10:56
- * @deprecated 更换验证方式而过时
  */
 @Slf4j
-//@Component
-@Deprecated
+@Component
 @RequiredArgsConstructor
-public class ValidateCodeFilter extends OncePerRequestFilter {
+public class ValidateCodeGrantTypeFilter extends OncePerRequestFilter {
 
     private final @NonNull AuthenticationFailureHandler authFailureHandle;
     private final @NonNull ValidateCodeProcessorHolder validateCodeProcessorHolder;
-    private Map<String, ValidateCodeType> urlMap = new HashMap<>();
-    private AntPathMatcher antPathMatcher = new AntPathMatcher();
+    private Map<String, ValidateCodeType> typeMap = new HashMap<>();
+    private RequestMatcher requestMatcher = new AntPathRequestMatcher("/oauth/token", HttpMethod.POST.name());
 
 
     @Override
     public void afterPropertiesSet() throws ServletException {
         super.afterPropertiesSet();
-        // 路径拦截
-        urlMap.put(SecurityConstants.LOGIN_PROCESSING_URL_SMS, ValidateCodeType.SMS);
-        urlMap.put(SecurityConstants.REGISTER_PROCESSING_URL_EMAIL, ValidateCodeType.EMAIL);
+        // 类型匹配
+        typeMap.put(SecurityConstants.GRANT_TYPE_SMS, ValidateCodeType.SMS);
+        typeMap.put(SecurityConstants.GRANT_TYPE_EMAIL, ValidateCodeType.EMAIL);
     }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        ValidateCodeType validateCodeType = getValidateCodeType(request);
-        if (validateCodeType != null) {
-            try {
-                log.debug("请求需要验证！验证请求：" + request.getRequestURI() + "验证类型：" + validateCodeType);
-                validateCodeProcessorHolder.findValidateCodeProcessor(validateCodeType)
-                        .validate(new ServletWebRequest(request, response));
-                log.debug("验证码通过！");
-            } catch (ValidateCodeException e) {
-                // 授权失败处理器接受处理
-                authFailureHandle.onAuthenticationFailure(request, response, e);
-                return;
+        if (requestMatcher.matches(request)) {
+            ValidateCodeType validateCodeType = getGrantType(request);
+            if (Objects.nonNull(validateCodeType)) {
+                try {
+                    log.debug("请求需要验证！验证请求：" + request.getRequestURI() + "验证类型：" + validateCodeType);
+                    validateCodeProcessorHolder.findValidateCodeProcessor(validateCodeType)
+                            .validate(new ServletWebRequest(request, response));
+                    log.debug("验证码通过！");
+                } catch (ValidateCodeException e) {
+                    // 授权失败处理器接受处理
+                    log.debug("验证失败！");
+                    authFailureHandle.onAuthenticationFailure(request, response, e);
+                    return;
+                }
             }
         }
         // 放行
@@ -80,16 +83,8 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
      * @param request 请求
      * @return 验证码类型
      */
-    private ValidateCodeType getValidateCodeType(HttpServletRequest request) {
-        if (StringUtils.endsWithIgnoreCase(request.getMethod(), HttpMethod.POST.name())) {
-            Set<String> urls = urlMap.keySet();
-            for (String url : urls) {
-                if (antPathMatcher.match(url, request.getRequestURI())) {
-                    return urlMap.get(url);
-                }
-            }
-        }
-        return null;
+    private ValidateCodeType getGrantType(HttpServletRequest request) {
+        return typeMap.get(request.getParameter(OAuth2Utils.GRANT_TYPE));
     }
 
 }

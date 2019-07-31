@@ -11,11 +11,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 /**
  * 授权提供者
  *
- * @author echo
+ *
+ * @author <a href="https://echocow.cn">EchoCow</a>
  * @version 1.0
  * @date 19-4-14 15:54
+ * @deprecated 过于复杂的配置方式，标记过时
  */
 @Setter
+@Deprecated
 public class SmsAuthenticationProvider implements AuthenticationProvider {
 
     private UserDetailsServiceImpl userDetailsService;

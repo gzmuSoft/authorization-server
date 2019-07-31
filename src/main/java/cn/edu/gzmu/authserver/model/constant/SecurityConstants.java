@@ -22,10 +22,10 @@ public interface SecurityConstants {
     /**
      * 发送短信验证码或验证短信验证码时，手机的参数名称
      */
-    String PARAMETER_SMS = "sms";
+    String GRANT_TYPE_SMS = "sms";
     /**
      * 发送邮箱验证码或验证短信验证码时，邮箱的参数名称
      */
-    String PARAMETER_EMAIL = "email";
+    String GRANT_TYPE_EMAIL = "email";
 
 }

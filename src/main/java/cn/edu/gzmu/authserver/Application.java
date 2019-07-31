@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * @author echo
+ * @author <a href="https://echocow.cn">EchoCow</a>
  * @date 2019-6-11
  */
 @SpringBootApplication

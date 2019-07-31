@@ -18,8 +18,11 @@
  * 最后我们需要将他交给登录成功处理器 {@link cn.edu.gzmu.authserver.auth.sms.SmsSuccessHandler}
  * 进行构建完整的 token 信息
  *
- * @author echo
+ * @author <a href="https://echocow.cn">EchoCow</a>
  * @version 1.0
  * @date 19-4-20 15:27
+ * @date 19-7-31 10:12
+ * @deprecated 过于复杂的配置方式，标记过时
+ * 参见 <a href="https://echocow.cn/articles/2019/07/30/1564498598952.html">Spring Security Oauth2 从零到一完整实践（五） 自定义授权模式（手机、邮箱等） </a>
  */
 package cn.edu.gzmu.authserver.auth.sms;

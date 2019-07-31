@@ -1,27 +1,29 @@
 package cn.edu.gzmu.authserver.validate.impl;
 
 import cn.edu.gzmu.authserver.model.constant.ValidateCodeType;
+import cn.edu.gzmu.authserver.model.exception.ValidateCodeException;
 import cn.edu.gzmu.authserver.validate.ValidateCode;
 import cn.edu.gzmu.authserver.validate.ValidateCodeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * 验证码资源类
+ * 验证码资源实现类
  *
  * @author <a href="https://echocow.cn">EchoCow</a>
- * @version 1.0
- * @date 19-4-16 22:18
- * @deprecated 过于复杂的实现，标记过时
+ * @date 2019/7/31 上午10:36
  */
-@Deprecated
-public abstract class AbstractValidateCodeRepository implements ValidateCodeRepository {
+@Component
+@RequiredArgsConstructor
+public class ValidateCodeRepositoryImpl implements ValidateCodeRepository {
 
-    @Autowired
-    private RedisTemplate<String, ValidateCode> redisTemplate;
+    private final @NonNull RedisTemplate<String, ValidateCode> redisTemplate;
 
     @Override
     public void save(ServletWebRequest request, ValidateCode code, ValidateCodeType type) {
@@ -39,14 +41,18 @@ public abstract class AbstractValidateCodeRepository implements ValidateCodeRepo
     }
 
     /**
-     * 构建 redis 的 key 值，需要子类实现。
-     * <p>
-     * 对于每种不同的验证码类型，都应该有不同的 key 的构建方式.
-     * 请求中的不同的参数应该分别获取不同的属性
+     * 构建 redis 存储时的 key
      *
-     * @param request 需要构建的请求体，
-     * @param type    验证码类型。
+     * @param request 请求
+     * @param type 类型
      * @return key
      */
-    protected abstract String buildKey(ServletWebRequest request, ValidateCodeType type);
+    private String buildKey(ServletWebRequest request, ValidateCodeType type) {
+        String deviceId = request.getParameter(type.getParamNameOnValidate().toLowerCase());
+        if (StringUtils.isEmpty(deviceId)) {
+            throw new ValidateCodeException("请求中不存在 " + type);
+        }
+        return "code:" + type + ":" + deviceId;
+    }
+
 }

@@ -28,9 +28,10 @@
  *
  * 现在一有两种验证码实现，参见 {@link cn.edu.gzmu.authserver.validate.email} 和  {@link cn.edu.gzmu.authserver.validate.sms}
  *
- * @author echo
+ * @author <a href="https://echocow.cn">EchoCow</a>
  * @version 1.0
  * @date 19-4-20 15:05
  * @date 19-5-22 11:53
+ * @date 19-7-31 10:54 标记过于复杂的实现为过时状态
  */
 package cn.edu.gzmu.authserver.validate;

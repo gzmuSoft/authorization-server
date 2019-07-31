@@ -14,10 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 授权过滤器
  *
- * @author echo
+ *
+ * @author <a href="https://echocow.cn">EchoCow</a>
  * @version 1.0
  * @date 19-4-14 15:44
+ * @deprecated 过于复杂的配置方式，标记过时
  */
+@Deprecated
 public class SmsAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     SmsAuthenticationFilter() {
@@ -45,7 +48,7 @@ public class SmsAuthenticationFilter extends AbstractAuthenticationProcessingFil
      * @return 请求中的 sms 值
      */
     private String obtainSms(HttpServletRequest request) {
-        return request.getHeader(SecurityConstants.PARAMETER_SMS);
+        return request.getHeader(SecurityConstants.GRANT_TYPE_SMS);
     }
 
     /**
