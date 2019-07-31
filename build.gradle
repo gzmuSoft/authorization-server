@@ -5,6 +5,7 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'idea'
+apply plugin: 'war'
 
 group = 'cn.edu.gzmu'
 version = '1.0.0-SNAPSHOT'
