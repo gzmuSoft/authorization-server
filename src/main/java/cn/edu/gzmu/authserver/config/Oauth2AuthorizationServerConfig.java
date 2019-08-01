@@ -6,8 +6,10 @@ import cn.edu.gzmu.authserver.auth.grant.SmsTokenGranter;
 import cn.edu.gzmu.authserver.auth.sms.SmsUserDetailsService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -44,6 +46,7 @@ public class Oauth2AuthorizationServerConfig extends AuthorizationServerConfigur
     private final @NonNull TokenEnhancer authTokenEnhancer;
     private final @NonNull SmsUserDetailsService smsUserDetailsService;
     private final @NonNull EmailUserDetailsService emailUserDetailsService;
+    private final @NotNull UserDetailsService userDetailsService;
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
@@ -54,7 +57,8 @@ public class Oauth2AuthorizationServerConfig extends AuthorizationServerConfigur
         endpoints.authenticationManager(authenticationManager)
             .tokenStore(jwtTokenStore)
             .tokenStore(jdbcTokenStore)
-            .tokenEnhancer(tokenEnhancerChain);
+            .tokenEnhancer(tokenEnhancerChain)
+            .userDetailsService(userDetailsService);
         endpoints.tokenGranter(tokenGranter(endpoints));
     }
 
