@@ -48,7 +48,8 @@ dependencies {
             'org.apache.httpcomponents:httpclient:4.5.9',
             'com.alibaba:fastjson:1.2.58',
             'com.alibaba:druid:1.1.17',
-            'com.alibaba:druid-spring-boot-starter:1.1.17'
+            'com.alibaba:druid-spring-boot-starter:1.1.17',
+            'org.jetbrains:annotations:17.0.0'
     )
     implementation(
             'org.springframework.boot:spring-boot-starter-web',

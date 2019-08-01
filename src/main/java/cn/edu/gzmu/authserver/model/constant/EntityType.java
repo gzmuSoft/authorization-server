@@ -1,39 +1,55 @@
 package cn.edu.gzmu.authserver.model.constant;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 public enum EntityType {
     /**
      * 管理员
      */
-    ADMIN(1),
+    ADMIN("ROLE_ADMIN"),
     /**
      * 教师
      */
-    TEACHER(2),
+    TEACHER("ROLE_TEACHER"),
     /**
      * 学生
      */
-    STUDENT(3);
+    STUDENT("ROLE_STUDENT"),
+    /**
+     * 系部管理员
+     */
+    DEPARTMENT_ADMIN("ROLE_DEPARTMENT_ADMIN");
 
-    private Integer value;
+    private String value;
 
-    EntityType(Integer i) {
-        value = i;
+    @Contract(pure = true)
+    EntityType(String name) {
+        value = name;
     }
 
-    public Integer value() {
+    @Contract(pure = true)
+    public String value() {
         return value;
     }
 
-
-    public static boolean isStudent(Integer id) {
-        return STUDENT.value.equals(id);
+    @Contract(pure = true)
+    public static boolean isStudent(@NotNull String name) {
+        return name.contains(STUDENT.value);
     }
 
-    public static boolean isTeacher(Integer id) {
-        return TEACHER.value.equals(id);
+    @Contract(pure = true)
+    public static boolean isTeacher(@NotNull String name) {
+        return name.contains(TEACHER.value);
     }
 
-    public static boolean isAdmin(Integer id) {
-        return ADMIN.value.equals(id);
+    @Contract(pure = true)
+    public static boolean isAdmin(@NotNull String name) {
+        return name.contains(ADMIN.value);
+    }
+
+    @Contract(pure = true)
+    public static boolean isDepartmentAdmin(@NotNull String name) {
+        return name.contains(DEPARTMENT_ADMIN.value);
     }
 }

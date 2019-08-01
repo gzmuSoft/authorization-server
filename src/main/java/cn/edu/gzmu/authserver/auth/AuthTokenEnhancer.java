@@ -9,6 +9,7 @@ import cn.edu.gzmu.authserver.repository.TeacherRepository;
 import com.alibaba.fastjson.JSON;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,8 +20,8 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -44,11 +45,12 @@ public class AuthTokenEnhancer implements TokenEnhancer {
         SysUser sysUser = sysUserRepository.findFirstByName(user.getUsername()).orElseThrow(
                 () -> new UsernameNotFoundException("用户未找到！")
         );
+        Set<SysRole> roles = sysUser.getRoles();
         additionalInfo.put("user_name", user.getUsername());
         additionalInfo.put("authorities", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
         additionalInfo.put("user_info", JSON.toJSON(sysUser));
-        additionalInfo.put("entity_info", JSON.toJSON(userDetails(sysUser)));
-        additionalInfo.put("role_info", JSON.toJSON(sysUser.getRoles()));
+        additionalInfo.put("entity_info", JSON.toJSON(userDetails(sysUser, roles)));
+        additionalInfo.put("role_info", JSON.toJSON(roles));
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }
@@ -56,18 +58,22 @@ public class AuthTokenEnhancer implements TokenEnhancer {
     /**
      * 获取用户详细信息
      *
-     * @param sysUser 用户
+     * @param roles 用户角色
      * @return 结果
      */
-    private Object userDetails(SysUser sysUser) {
-        if (EntityType.isStudent(sysUser.getEntityType())) {
-            return studentRepository.getOne(sysUser.getEntityId());
-        } else if (EntityType.isTeacher(sysUser.getEntityType())) {
-            return teacherRepository.getOne(sysUser.getEntityId());
-        } else if (EntityType.isAdmin(sysUser.getEntityType())){
-            return "ROLE_ADMIN";
-        } else {
-            return null;
+    private Object userDetails(SysUser sysUser, @NotNull Set<SysRole> roles) {
+        Object result = null;
+        for (SysRole role : roles) {
+            if (EntityType.isAdmin(role.getName())) {
+                result = "ROLE_ADMIN";
+            }
+            if (EntityType.isTeacher(role.getName())) {
+                result = teacherRepository.findFirstByUserId(sysUser.getId()).orElse(null);
+            }
+            if (EntityType.isStudent(role.getName())) {
+                result = studentRepository.findFirstByUserId(sysUser.getId()).orElse(null);
+            }
         }
+        return result;
     }
 }

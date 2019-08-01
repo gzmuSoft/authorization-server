@@ -29,16 +29,6 @@ import java.util.Set;
 public class SysUser extends BaseEntity implements Serializable {
 
     /**
-     * 用户主体编号
-     */
-    private java.lang.Long entityId;
-
-    /**
-     * 0：系统管理员、1：教务管理员、2：课程管理员、3：教师、4：学生
-     */
-    private java.lang.Integer entityType;
-
-    /**
      * 密码
      */
     @JSONField(serialize = false)

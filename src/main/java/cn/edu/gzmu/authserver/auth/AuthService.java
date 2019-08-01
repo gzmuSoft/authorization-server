@@ -1,6 +1,5 @@
 package cn.edu.gzmu.authserver.auth;
 
-import cn.edu.gzmu.authserver.model.constant.EntityType;
 import cn.edu.gzmu.authserver.model.entity.Student;
 import cn.edu.gzmu.authserver.model.entity.SysData;
 import cn.edu.gzmu.authserver.model.entity.SysUser;
@@ -40,8 +39,6 @@ public class AuthService {
         if (existUser(user)) {
             throw new ResourceExistException("用户已经存在！");
         }
-        user.setEntityType(EntityType.STUDENT.value());
-        user.setEntityId(student.getId());
         user.setPwd(bCryptPasswordEncoder.encode(user.getPwd()));
         SysUser save = sysUserRepository.save(user);
         exist.setUserId(save.getId());
