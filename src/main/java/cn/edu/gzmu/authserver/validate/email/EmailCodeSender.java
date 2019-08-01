@@ -26,6 +26,6 @@ public class EmailCodeSender implements ValidateCodeSender {
         HashMap<String, Object> variables = new HashMap<>(1);
         variables.put("code", code.getCode());
         variables.put("time", Duration.ofSeconds(code.getExpireIn()).toMinutes());
-        emailUtils.sendTemplateMail(receive, "注册", "[云课程]欢迎注册", "registerTemplate.html", variables);
+        emailUtils.sendTemplateMail(receive, "登录", "[云课程]欢迎登录", "registerTemplate.html", variables);
     }
 }
