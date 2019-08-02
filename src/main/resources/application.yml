@@ -57,3 +57,4 @@ logging:
     org:
       springframework:
         security: debug
+  file: logs/auth-server.log
