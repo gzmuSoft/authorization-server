@@ -52,8 +52,8 @@ application:
     app-key: e7eede1811867421882df861a20ed26e
     action-template: RhXa91
 
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        security: debug
+logging:
+  level:
+    org:
+      springframework:
+        security: debug
