@@ -53,8 +53,8 @@ application:
     action-template: RhXa91
 
 logging:
-  level:
-    org:
-      springframework:
-        security: debug
+#  level:
+#    org:
+#      springframework:
+#        security: debug
   file: logs/auth-server.log
