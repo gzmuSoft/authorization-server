@@ -22,7 +22,9 @@ import java.util.List;
 /**
  * @author <a href="https://echocow.cn">EchoCow</a>
  * @date 2019/8/4 下午8:49
+ * @deprecated 将单独抽离授权服务器数据库作为新的资源服务器
  */
+@Deprecated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/teacher")

@@ -3,14 +3,12 @@ package cn.edu.gzmu.authserver.controller;
 import cn.edu.gzmu.authserver.model.entity.Student;
 import cn.edu.gzmu.authserver.model.exception.ResourceNotFoundException;
 import cn.edu.gzmu.authserver.repository.StudentRepository;
-import cn.edu.gzmu.authserver.util.VerifyParameter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author <a href="https://echocow.cn">EchoCow</a>
  * @date 2019/8/4 下午8:49
+ * @deprecated 将单独抽离授权服务器数据库作为新的资源服务器
  */
+@Deprecated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/student")
