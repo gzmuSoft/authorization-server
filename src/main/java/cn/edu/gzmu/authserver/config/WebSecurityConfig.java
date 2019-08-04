@@ -1,11 +1,8 @@
 package cn.edu.gzmu.authserver.config;
 
-import cn.edu.gzmu.authserver.validate.ValidateCodeSecurityConfig;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,21 +22,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final @NonNull ValidateCodeSecurityConfig validateCodeSecurityConfig;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.apply(validateCodeSecurityConfig);
-
+        // 你不会相信我为了解决这个问题搞了 八 小时
+        // 我也不知道为什么在某些时候总会变得很无助
+        // 但是至少最后是成功的而不至于是无用功
+        // 然而确是没有什么太大的收获
         http
                 .formLogin()
                 .loginPage("/oauth/login")
-                .loginProcessingUrl("/authorization/form")
-                .and()
-                .authorizeRequests()
-                .antMatchers("/oauth/login").permitAll()
-                .anyRequest()
-                .authenticated();
+                .loginProcessingUrl("/authorization/form");
     }
 
 

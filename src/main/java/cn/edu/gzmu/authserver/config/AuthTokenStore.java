@@ -57,6 +57,7 @@ public class AuthTokenStore {
      * @return JdbcTokenStore
      */
     @Bean
+    @Primary
     public TokenStore jdbcTokenStore() {
         return new JdbcTokenStore(dataSource);
     }
@@ -67,7 +68,6 @@ public class AuthTokenStore {
      * @return JdbcTokenStore
      */
     @Bean
-    @Primary
     public JwtTokenStore jwtTokenStore() {
         return new JwtTokenStore(jwtAccessTokenConverter());
     }
