@@ -7,4 +7,3 @@
         ${AnsiColor.BLUE} :: lesson-cloud ::      0.0.1-SNAPSHOT
         ${AnsiColor.BRIGHT_GREEN} :: Spring Boot ::      ${spring-boot.formatted-version}
         ${AnsiColor.RED} :: School ::             贵州民族大学
-
