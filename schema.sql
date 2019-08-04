@@ -170,8 +170,6 @@ create table sys_user
     id            bigint auto_increment comment '编号' primary key,
     name          varchar(55)                                null comment '名称',
     spell         varchar(255) default ''                    null comment '名称的全拼',
-    entity_id     bigint                                     null comment '用户主体编号',
-    entity_type   int(4)                                     null comment '1：系统管理员、2：教师、3：学生、待添加：系部管理员',
     pwd           varchar(255)                               null comment '密码',
     status        int(2)       default 1                     not null comment '1：正常、2：锁定一小时、3：禁用',
     icon          varchar(255) default '图标：images/guest.jpg' null comment '图标',
