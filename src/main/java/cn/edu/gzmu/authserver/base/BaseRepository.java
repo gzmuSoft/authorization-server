@@ -42,26 +42,6 @@ public interface BaseRepository<T extends BaseEntity, ID> extends JpaRepository<
      * @return 结果
      */
     @Query(value = "select * from #{#entityName}  where id in (:ids) and is_enable = 1 ", nativeQuery = true)
-    List<T> searchAllByIds(@Param("ids") List<Object> ids);
+    List<T> searchAllByIds(@Param("ids") List<String> ids);
 
-    /**
-     * 真正删除一个数据
-     *
-     * @param id id
-     */
-    @Modifying
-    @Transactional(rollbackOn = Exception.class)
-    @Query(value = "delete from #{#entityName} where id = :id", nativeQuery = true)
-    void deleteExistById(@Param("id") ID id);
-
-
-    /**
-     * 禁用默认的删除方法
-     *
-     * @param id id
-     */
-    @Override
-    default void deleteById(ID id){
-        deleteExistById(id);
-    }
 }

@@ -30,6 +30,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 public @interface VerifyParameter {
+
+    /**
+     * 同 required
+     *
+     * @return required
+     */
+    String[] value() default "";
+
     /**
      * 验证的参数
      * <p>

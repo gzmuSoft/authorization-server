@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Where;
+import org.springframework.data.annotation.Transient;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -137,5 +138,14 @@ public class Teacher extends BaseEntity implements Serializable {
      */
     @Size(max = 18, message = "idNumber 不能大于 18 位")
     private java.lang.String idNumber;
+
+    @Transient
+    private SysData school;
+
+    @Transient
+    private SysData college;
+
+    @Transient
+    private SysData dep;
 
 }

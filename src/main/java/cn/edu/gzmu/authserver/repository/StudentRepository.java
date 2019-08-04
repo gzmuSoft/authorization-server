@@ -3,7 +3,6 @@ package cn.edu.gzmu.authserver.repository;
 
 import cn.edu.gzmu.authserver.base.BaseRepository;
 import cn.edu.gzmu.authserver.model.entity.Student;
-import cn.edu.gzmu.authserver.model.entity.Teacher;
 
 import java.util.Optional;
 
