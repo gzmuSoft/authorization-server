@@ -4,9 +4,12 @@ import cn.edu.gzmu.authserver.validate.ValidateCodeSecurityConfig;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @version 1.0.0
  * @date 19-6-11 下午5:20
  */
+@Order(2)
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
@@ -28,14 +32,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.apply(validateCodeSecurityConfig);
 
         http
-                .authorizeRequests()
-                .antMatchers("/code/*").permitAll()
-//                .antMatchers("/druid/**").permitAll()
-                .anyRequest()
-                .authenticated()
+                .formLogin()
+                .loginPage("/oauth/login")
+                .loginProcessingUrl("/authorization/form")
                 .and()
-                .csrf()
-                .disable();
+                .authorizeRequests()
+                .antMatchers("/oauth/login").permitAll()
+                .anyRequest()
+                .authenticated();
+    }
+
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers("/css/**", "/img/**");
     }
 
     /**

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header::_header('欢迎登录')">
+    <title>欢迎登录</title>
+</head>
+
+<body>
+
+<div class="login">
+    <div class="container-login100">
+        <div class="wrap-login100">
+            <div class="login100-pic js-tilt" data-tilt>
+                <img th:src="@{/img/logo.png}" src="img/logo.png" width="3001" alt="IMG">
+            </div>
+            <form class="login100-form validate-form" th:action="@{/authorization/form}" method="post">
+				<span class="login100-form-title">
+					登 录
+				</span>
+
+                <div class="wrap-input100 validate-input user-name">
+                    <label>
+                        <input class="input100" type="text" id="username" name="username"
+                               placeholder="请输入用户名/邮箱/手机号" required minlength="4">
+                    </label>
+                    <span class="focus-input100"></span>
+                    <span class="symbol-input100">
+						<i aria-hidden="true"><img th:src="@{/img/user-ico.png}" src="img/user-ico.png" width="20px" alt="user"></i>
+					</span>
+                </div>
+
+                <div class="wrap-input100 validate-input">
+                    <label>
+                        <input class="input100" type="password" id="password" name="password"
+                               placeholder="请输入密码" required minlength="4">
+                    </label>
+                    <span class="focus-input100"></span>
+                    <span class="symbol-input100">
+						<i aria-hidden="true"><img th:src="@{/img/pwd-ico.png}" src="img/pwd-ico.png" width="20px" alt="pwd"></i>
+					</span>
+                </div>
+
+                <div class=" p-t-12">
+                    <a class="txt2" href="javascript:">
+                        忘记密码？
+                    </a>
+                </div>
+
+                <div class="container-login100-form-btn">
+                    <button type="submit" class="login100-form-btn">
+						登 录
+					</button>
+                </div>
+
+                <div class="login-method">
+                    <div class=" text-center txt3 p-t-54 p-b-20">
+                        <span>第三方登录</span>
+                    </div>
+                    <div class="flex-c-m">
+                        <a href="#" class="me-wechat methods">
+                            <i ><img th:src="@{/img/weibo-me.png}" src="img/weibo-me.png" width="50px" alt="微博登录"></i>
+                        </a>
+                        <a href="#" class="me-qq methods">
+                            <i ><img th:src="@{/img/wechat-me.png}" src="img/wechat-me.png" width="48px" alt="微信登录"></i>
+                        </a>
+                        <a href="#" class="me-weibo methods">
+                            <i ><img th:src="@{/img/QQ-me.png}" src="img/QQ-me.png" width="38px" alt="QQ登录"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="text-center p-t-136">
+                    <a class="txt2" href="#">
+                        还没有账号？立即注册
+                        <i aria-hidden="true"><img th:src="@{/img/register.png}" src="/img/register.png" width="15px" alt=""></i>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
