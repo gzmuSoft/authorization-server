@@ -12,6 +12,8 @@ import java.util.Collection;
 import static cn.edu.gzmu.authserver.model.constant.SecurityConstants.*;
 
 /**
+ * 授权决策
+ *
  * @author <a href="https://echocow.cn">EchoCow</a>
  * @date 2019/8/6 下午2:03
  */
