@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @RequiredArgsConstructor
 @EnableResourceServer
 public class Oauth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
-    private @NonNull JwtTokenStore jwtTokenStore;
+    private final @NonNull JwtTokenStore jwtTokenStore;
     private final @NonNull ValidateCodeSecurityConfig validateCodeSecurityConfig;
     private final @NonNull AuthTokenSecurityConfig authTokenSecurityConfig;
 

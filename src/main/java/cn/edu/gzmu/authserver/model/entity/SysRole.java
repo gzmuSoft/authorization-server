@@ -8,10 +8,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -53,5 +50,11 @@ public class SysRole extends BaseEntity implements Serializable {
     @JSONField(serialize = false)
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<SysUser> users = new HashSet<>();
+
+    @JSONField(serialize = false)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "sys_role_res", joinColumns = @JoinColumn(name = "roleId"),
+            inverseJoinColumns = @JoinColumn(name = "resId"))
+    private Set<SysRes> res = new HashSet<>();
 
 }

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -42,6 +43,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
     private final @NonNull ResourceServerTokenServices resourceServerTokenServices;
+    private final @NonNull UserDetailsService userDetailsService;
     private final static String BEARER = "Bearer ";
 
     @Override
@@ -58,6 +60,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                     throw new InvalidTokenException("Token has expired");
                 }
                 OAuth2Authentication oAuth2Authentication = resourceServerTokenServices.loadAuthentication(token);
+                oAuth2Authentication.setDetails(userDetailsService.loadUserByUsername(oAuth2Authentication.getName()));
                 SecurityContextHolder.getContext().setAuthentication(oAuth2Authentication);
             }
         }

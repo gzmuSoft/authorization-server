@@ -27,5 +27,17 @@ public interface SecurityConstants {
      * 发送邮箱验证码或验证短信验证码时，邮箱的参数名称
      */
     String GRANT_TYPE_EMAIL = "email";
+    /**
+     * 公共角色
+     */
+    String ROLE_PUBLIC = "ROLE_PUBLIC";
+    /**
+     * 管理员角色
+     */
+    String ROLE_ADMIN = "ROLE_ADMIN";
+    /**
+     * 未授权角色
+     */
+    String ROLE_NO_AUTH = "ROLE_NO_AUTH";
 
 }

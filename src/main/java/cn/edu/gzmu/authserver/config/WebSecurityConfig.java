@@ -1,9 +1,12 @@
 package cn.edu.gzmu.authserver.config;
 
+import cn.edu.gzmu.authserver.auth.res.AuthAccessDecisionManager;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -11,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 /**
  * @author <a href="https://echocow.cn">EchoCow</a>
@@ -22,6 +27,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    private final @NonNull FilterInvocationSecurityMetadataSource securityMetadataSource;
+    private final @NonNull AuthAccessDecisionManager authAccessDecisionManager;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -32,14 +39,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .formLogin()
                 .loginPage("/oauth/login")
-                .loginProcessingUrl("/authorization/form");
+                .loginProcessingUrl("/authorization/form")
+                .and()
+                .authorizeRequests()
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                        o.setSecurityMetadataSource(securityMetadataSource);
+                        o.setAccessDecisionManager(authAccessDecisionManager);
+                        return o;
+                    }
+                }).anyRequest().permitAll();
     }
 
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring()
-                .antMatchers("/css/**", "/img/**");
+                .antMatchers("/css/**", "/img/**", "/*.ico");
     }
 
     /**
