@@ -1,6 +1,7 @@
 package cn.edu.gzmu.authserver.config;
 
 
+import cn.edu.gzmu.authserver.auth.AuthTokenSecurityConfig;
 import cn.edu.gzmu.authserver.validate.ValidateCodeSecurityConfig;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +23,18 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 public class Oauth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
     private @NonNull JwtTokenStore jwtTokenStore;
     private final @NonNull ValidateCodeSecurityConfig validateCodeSecurityConfig;
+    private final @NonNull AuthTokenSecurityConfig authTokenSecurityConfig;
 
     @Override
-    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+    public void configure(ResourceServerSecurityConfigurer resources) {
         resources.tokenStore(jwtTokenStore);
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.apply(validateCodeSecurityConfig);
+        http.apply(validateCodeSecurityConfig)
+                .and()
+                .apply(authTokenSecurityConfig);
 
         http
                 .authorizeRequests()

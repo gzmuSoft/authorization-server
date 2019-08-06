@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,9 +21,7 @@ import java.util.List;
 /**
  * @author <a href="https://echocow.cn">EchoCow</a>
  * @date 2019/8/4 下午8:49
- * @deprecated 将单独抽离授权服务器数据库作为新的资源服务器
  */
-@Deprecated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/teacher")
