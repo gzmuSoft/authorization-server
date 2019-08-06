@@ -39,5 +39,13 @@ public interface SecurityConstants {
      * 未授权角色
      */
     String ROLE_NO_AUTH = "ROLE_NO_AUTH";
+    /**
+     * 教师角色
+     */
+    String ROLE_TEACHER = "ROLE_TEACHER";
+    /**
+     * 学生角色
+     */
+    String ROLE_STUDENT = "ROLE_STUDENT";
 
 }

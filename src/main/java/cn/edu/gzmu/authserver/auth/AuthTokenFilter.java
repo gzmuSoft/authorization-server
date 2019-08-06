@@ -1,6 +1,7 @@
 package cn.edu.gzmu.authserver.auth;
 
 import cn.edu.gzmu.authserver.config.WebSecurityConfig;
+import cn.edu.gzmu.authserver.repository.SysUserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
     private final @NonNull ResourceServerTokenServices resourceServerTokenServices;
-    private final @NonNull UserDetailsService userDetailsService;
+    private final @NonNull SysUserRepository sysUserRepository;
     private final static String BEARER = "Bearer ";
 
     @Override
@@ -60,7 +61,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                     throw new InvalidTokenException("Token has expired");
                 }
                 OAuth2Authentication oAuth2Authentication = resourceServerTokenServices.loadAuthentication(token);
-                oAuth2Authentication.setDetails(userDetailsService.loadUserByUsername(oAuth2Authentication.getName()));
+                oAuth2Authentication.setDetails(sysUserRepository.findFirstByName(oAuth2Authentication.getName()).orElse(null));
                 SecurityContextHolder.getContext().setAuthentication(oAuth2Authentication);
             }
         }
