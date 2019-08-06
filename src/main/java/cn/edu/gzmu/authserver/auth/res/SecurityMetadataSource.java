@@ -26,6 +26,10 @@ import java.util.stream.Collectors;
 import static cn.edu.gzmu.authserver.model.constant.SecurityConstants.*;
 
 /**
+ * 动态权限配置核心，将会对请求进行进行匹配
+ * <p>
+ * 对请求匹配后，赋予对应的角色。
+ *
  * @author <a href="https://echocow.cn">EchoCow</a>
  * @date 2019/8/6 下午1:52
  */
