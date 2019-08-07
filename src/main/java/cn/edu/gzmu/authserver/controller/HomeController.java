@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
- * api
+ * api 获取当前授权服务器的 api 信息
  *
  * @author <a href="https://echocow.cn">EchoCow</a>
  * @date 2019/8/7 上午10:19
