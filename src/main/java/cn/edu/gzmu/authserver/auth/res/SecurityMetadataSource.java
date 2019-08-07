@@ -89,7 +89,8 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
             if (matchRoles.size() == 0) {
                 continue;
             }
-            return SecurityConfig.createList(matchRoles.stream().map(SysRole::getName).collect(Collectors.joining(",")));
+            return SecurityConfig.createListFromCommaDelimitedString(matchRoles.stream()
+                    .map(SysRole::getName).collect(Collectors.joining(",")));
         }
         return SecurityConfig.createList(ROLE_NO_AUTH);
     }
