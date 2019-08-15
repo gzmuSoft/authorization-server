@@ -37,7 +37,7 @@ public class TeacherController {
 
     @GetMapping("/teacher/one/{id}")
     public HttpEntity<?> teacher(@PathVariable Long id) {
-        Assert.notNull(id,"缺少必要的参数信息");
+        Assert.notNull(id, "缺少必要的参数信息");
         return ResponseEntity.ok(teacherRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("The teacher not find by " + id))
         );
@@ -45,9 +45,9 @@ public class TeacherController {
 
     @GetMapping("/teachers")
     public HttpEntity<?> teachers(String ids) {
-        Assert.notNull(ids,"缺少必要的参数信息");
+        Assert.notNull(ids, "缺少必要的参数信息");
         List<Teacher> teachers = teacherRepository.searchAllByIds(Arrays.asList
-                (StringUtils.split(ids, "."))
+                (StringUtils.split(ids, ","))
         );
         return ResponseEntity.ok(teachers);
     }
