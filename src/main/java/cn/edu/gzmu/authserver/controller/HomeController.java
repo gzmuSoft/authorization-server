@@ -6,8 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpointHandlerMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -26,6 +29,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class HomeController {
 
+    private final @NonNull PasswordEncoder passwordEncoder;
     private final @NonNull HttpServletRequest request;
     private final @NonNull RequestMappingHandlerMapping requestMappingHandlerMapping;
     private final @NonNull FrameworkEndpointHandlerMapping frameworkEndpointHandlerMapping;
@@ -39,6 +43,14 @@ public class HomeController {
                 result.put(value.getMethod().getName(), getBaseUrl() + getPath(key)));
         applicationHandlerMethods.forEach((key, value) ->
                 result.put(value.getMethod().getName(), getBaseUrl() + getPath(key)));
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/encrypt")
+    public HttpEntity<?> encrypt(@RequestParam String password) {
+        JSONObject result = new JSONObject();
+        result.put("password", password);
+        result.put("encrypt", passwordEncoder.encode(password));
         return ResponseEntity.ok(result);
     }
 

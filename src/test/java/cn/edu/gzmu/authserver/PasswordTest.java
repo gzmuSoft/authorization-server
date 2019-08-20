@@ -2,6 +2,7 @@ package cn.edu.gzmu.authserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Base64;
 
@@ -11,10 +12,14 @@ import java.util.Base64;
  * @date 19-6-11 下午5:42
  */
 class PasswordTest {
+
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+
     @Test
     void password() {
-        System.out.println(new BCryptPasswordEncoder().encode("secret"));
-        System.out.println(new BCryptPasswordEncoder().encode("123456"));
+        System.out.println(passwordEncoder.encode("lesson-cloud-secret"));
+        System.out.println(passwordEncoder.encode("secret"));
+        System.out.println(passwordEncoder.encode("1997"));
     }
 
     @Test
