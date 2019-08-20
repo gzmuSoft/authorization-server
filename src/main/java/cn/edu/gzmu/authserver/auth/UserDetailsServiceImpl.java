@@ -105,7 +105,8 @@ public class UserDetailsServiceImpl implements UserDetailsService, SmsUserDetail
         List<SimpleGrantedAuthority> authorities = sysRoles.stream()
                 .map(sysRole -> new SimpleGrantedAuthority(sysRole.getName()))
                 .collect(Collectors.toList());
-        return new User(sysUser.getName(), sysUser.getPwd(), authorities);
+        return new User(sysUser.getName(), sysUser.getPwd(),sysUser.getIsEnable(), true, true,
+                sysUser.getStatus() == 1, authorities);
     }
 
 //    /**
