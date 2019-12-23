@@ -2,7 +2,6 @@ package cn.edu.gzmu.authserver.config;
 
 import cn.edu.gzmu.authserver.validate.ValidateCode;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -34,7 +33,7 @@ public class ApplicationConfig {
         RedisTemplate<String, ValidateCode> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.afterPropertiesSet();
-        RedisSerializer stringSerializer = new StringRedisSerializer();
+        RedisSerializer<String> stringSerializer = new StringRedisSerializer();
         redisTemplate.setKeySerializer(stringSerializer);
         redisTemplate.setHashKeySerializer(stringSerializer);
         ObjectMapper om = new ObjectMapper();
@@ -42,7 +41,6 @@ public class ApplicationConfig {
         om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         om.registerModule(new JavaTimeModule());
         om.registerModule((new SimpleModule()));
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
         GenericJackson2JsonRedisSerializer jacksonSerial = new GenericJackson2JsonRedisSerializer(om);
         redisTemplate.setValueSerializer(jacksonSerial);
         redisTemplate.setHashValueSerializer(jacksonSerial);

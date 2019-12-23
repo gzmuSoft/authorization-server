@@ -39,7 +39,7 @@ import java.util.List;
 @EnableAuthorizationServer
 public class Oauth2AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
     private final @NonNull AuthenticationManager authenticationManager;
-    private final @NonNull TokenStore jdbcTokenStore;
+    private final @NonNull TokenStore tokenStore;
     private final @NonNull JwtTokenStore jwtTokenStore;
     private final @NonNull ClientDetailsService clientDetails;
     private final @NonNull JwtAccessTokenConverter jwtAccessTokenConverter;
@@ -56,7 +56,7 @@ public class Oauth2AuthorizationServerConfig extends AuthorizationServerConfigur
 
         endpoints.authenticationManager(authenticationManager)
             .tokenStore(jwtTokenStore)
-            .tokenStore(jdbcTokenStore)
+            .tokenStore(tokenStore)
             .tokenEnhancer(tokenEnhancerChain)
             .userDetailsService(userDetailsService);
         endpoints.tokenGranter(tokenGranter(endpoints));

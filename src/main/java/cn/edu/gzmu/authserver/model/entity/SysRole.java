@@ -53,8 +53,8 @@ public class SysRole extends BaseEntity implements Serializable {
 
     @JSONField(serialize = false)
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "sys_role_res", joinColumns = @JoinColumn(name = "roleId"),
-            inverseJoinColumns = @JoinColumn(name = "resId"))
+    @JoinTable(name = "sys_role_res", joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "res_id"))
     private Set<SysRes> res = new HashSet<>();
 
 }

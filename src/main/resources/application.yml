@@ -53,7 +53,8 @@ application:
     action-template: RhXa91
 logging:
   level:
-    org:
-      springframework:
-        security: debug
-  file: logs/auth-server.log
+    cn.edu.gzmu.authserver: debug
+    org.springframework.security: debug
+    org.springframework.context.support.[PostProcessorRegistrationDelegate$BeanPostProcessorChecker]: WARN
+  file:
+    name: logs/auth-server.log

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
@@ -16,6 +17,7 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import javax.sql.DataSource;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +34,7 @@ public class AuthTokenStore {
     private final @NonNull DataSource dataSource;
     private final @NonNull Oauth2Properties oauth2Properties;
     private final @NonNull TokenEnhancer authTokenEnhancer;
-
+    private final @NonNull RedisConnectionFactory redisConnectionFactory;
     /**
      * TokenServices
      *
@@ -58,8 +60,8 @@ public class AuthTokenStore {
      */
     @Bean
     @Primary
-    public TokenStore jdbcTokenStore() {
-        return new JdbcTokenStore(dataSource);
+    public TokenStore tokenStore() {
+        return new RedisTokenStore(redisConnectionFactory);
     }
 
     /**
