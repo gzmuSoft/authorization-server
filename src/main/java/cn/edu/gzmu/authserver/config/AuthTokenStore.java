@@ -1,6 +1,8 @@
 package cn.edu.gzmu.authserver.config;
 
+import cn.edu.gzmu.authserver.auth.ClientDetailsServiceImpl;
 import cn.edu.gzmu.authserver.model.properties.Oauth2Properties;
+import cn.edu.gzmu.authserver.repository.ClientDetailsRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -8,18 +10,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
-import javax.sql.DataSource;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,10 +32,12 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @RequiredArgsConstructor
 public class AuthTokenStore {
-    private final @NonNull DataSource dataSource;
     private final @NonNull Oauth2Properties oauth2Properties;
     private final @NonNull TokenEnhancer authTokenEnhancer;
     private final @NonNull RedisConnectionFactory redisConnectionFactory;
+    private final @NonNull ClientDetailsRepository clientDetailsRepository;
+    private static final Integer STRENGTH = 12;
+
     /**
      * TokenServices
      *
@@ -87,14 +90,26 @@ public class AuthTokenStore {
         return accessTokenConverter;
     }
 
+
     /**
-     * 声明 ClientDetails实现
+     * 加密.
+     *
+     * @return 加密
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(STRENGTH);
+    }
+
+
+    /**
+     * 声明 客户端 信息
      *
      * @return ClientDetailsService
      */
     @Bean
     public ClientDetailsService clientDetails() {
-        return new JdbcClientDetailsService(dataSource);
+        return new ClientDetailsServiceImpl(clientDetailsRepository, passwordEncoder());
     }
 
 }

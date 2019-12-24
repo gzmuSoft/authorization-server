@@ -12,8 +12,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
@@ -29,7 +27,6 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final @NonNull FilterInvocationSecurityMetadataSource securityMetadataSource;
     private final @NonNull AuthAccessDecisionManager authAccessDecisionManager;
-    private final static Integer STRENGTH = 12;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -57,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
-                .antMatchers("/css/**", "/img/**", "/*.ico");
+                .antMatchers("/css/**", "/img/**");
     }
 
     /**
@@ -71,10 +68,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(STRENGTH);
-    }
-
 }
