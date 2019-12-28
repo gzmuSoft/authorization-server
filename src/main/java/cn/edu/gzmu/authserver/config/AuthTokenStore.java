@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
+import java.security.KeyPair;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -85,11 +86,15 @@ public class AuthTokenStore {
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         final JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
-        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("gzmu.jks"), "lizhongyue248".toCharArray());
-        accessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair("gzmu"));
+        accessTokenConverter.setKeyPair(keyPair());
         return accessTokenConverter;
     }
 
+    @Bean
+    public KeyPair keyPair() {
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("gzmu.jks"), "lizhongyue248".toCharArray());
+        return keyStoreKeyFactory.getKeyPair("gzmu");
+    }
 
     /**
      * 加密.

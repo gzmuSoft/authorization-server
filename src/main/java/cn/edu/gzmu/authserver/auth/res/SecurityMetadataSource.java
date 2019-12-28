@@ -3,9 +3,7 @@ package cn.edu.gzmu.authserver.auth.res;
 import cn.edu.gzmu.authserver.model.constant.HttpMethod;
 import cn.edu.gzmu.authserver.model.entity.SysRes;
 import cn.edu.gzmu.authserver.model.entity.SysRole;
-import cn.edu.gzmu.authserver.model.exception.ResourceNotFoundException;
 import cn.edu.gzmu.authserver.repository.SysResRepository;
-import cn.edu.gzmu.authserver.repository.SysRoleRepository;
 import cn.edu.gzmu.authserver.repository.SysUserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +46,6 @@ import static cn.edu.gzmu.authserver.model.constant.SecurityConstants.*;
 @RequiredArgsConstructor
 public class SecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
     private final @NonNull SysResRepository sysResRepository;
-    private final @NonNull SysRoleRepository sysRoleRepository;
     private final @NonNull AuthToken authToken;
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -63,8 +60,6 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
         String method = httpRequest.getMethod();
         String requestUrl = httpRequest.getServletPath();
         List<SysRes> sysRes = sysResRepository.findAll();
-        SysRole publicRole = sysRoleRepository.findFirstByName(ROLE_PUBLIC).orElseThrow(
-                () -> new ResourceNotFoundException("公共资源角色未找到！"));
         for (SysRes res : sysRes) {
             // 路径匹配
             if (!antPathMatcher.match(res.getUrl(), requestUrl)) {
@@ -79,13 +74,15 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
                 continue;
             }
             // 获取匹配当前资源的角色 id 表
-            List<Long> sysRoleIds = roles.stream().map(SysRole::getId).collect(Collectors.toList());
-            // 如果当前匹配的角色中含有公共资源的 id
-            if (sysRoleIds.contains(publicRole.getId())) {
+            List<String> sysRoleNames = roles.stream().map(SysRole::getName).collect(Collectors.toList());
+            if (sysRoleNames.contains(ROLE_PUBLIC)) {
                 return SecurityConfig.createList(ROLE_PUBLIC);
+            } else if (sysRoleNames.contains(ROLE_NO_LOGIN)) {
+                return SecurityConfig.createList(ROLE_NO_LOGIN);
             }
+            // 如果当前匹配的角色中含有公共资源的 id
             List<SysRole> matchRoles = roles.stream().filter(
-                    sysRole -> sysRoleIds.contains(sysRole.getId())).collect(Collectors.toList());
+                    sysRole -> sysRoleNames.contains(sysRole.getName())).collect(Collectors.toList());
             if (matchRoles.size() == 0) {
                 continue;
             }
@@ -117,7 +114,7 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
 
         private final @NonNull ResourceServerTokenServices resourceServerTokenServices;
         private final @NonNull SysUserRepository sysUserRepository;
-        private final static String BEARER = "Bearer ";
+        private static final String BEARER = "Bearer ";
 
         void authorization(HttpServletRequest request) {
             String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);

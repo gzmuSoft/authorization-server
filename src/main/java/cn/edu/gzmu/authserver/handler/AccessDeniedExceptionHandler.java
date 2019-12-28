@@ -3,28 +3,33 @@ package cn.edu.gzmu.authserver.handler;
 import com.alibaba.fastjson.JSONObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author <a href="https://echocow.cn">EchoCow</a>
  * @date 2019/8/4 下午10:14
  */
 @Slf4j
-@RestControllerAdvice
 @RequiredArgsConstructor
-public class AccessDeniedExceptionHandler {
+public class AccessDeniedExceptionHandler extends OAuth2AccessDeniedHandler implements AccessDeniedHandler {
 
-    @ExceptionHandler(value = AccessDeniedException.class)
-    public HttpEntity<?> handler(AccessDeniedException exception) {
-        JSONObject param = new JSONObject();
-        param.put("error", exception.getClass().getSimpleName());
-        param.put("error_description", exception.getLocalizedMessage());
-        return new ResponseEntity<>(param, HttpStatus.UNAUTHORIZED);
+    @Override
+    public void handle(HttpServletRequest request, HttpServletResponse response,
+                       AccessDeniedException accessDeniedException) throws IOException {
+        JSONObject result = new JSONObject();
+        result.put("error", accessDeniedException.getClass().getSimpleName());
+        result.put("error_description", accessDeniedException.getLocalizedMessage());
+        log.debug("Access Denied Failed!");
+        response.setContentType("application/json;charset=utf-8");
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.getWriter().write(result.toJSONString());
     }
 
 }

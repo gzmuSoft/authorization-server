@@ -47,5 +47,9 @@ public interface SecurityConstants {
      * 学生角色
      */
     String ROLE_STUDENT = "ROLE_STUDENT";
+    /**
+     * 未登录
+     */
+    String ROLE_NO_LOGIN = "ROLE_NO_LOGIN";
 
 }

@@ -41,6 +41,8 @@ spring:
   redis:
     host: 127.0.0.1
     password:
+  application:
+    name: gzmu-auth
 management:
   endpoints:
     web:

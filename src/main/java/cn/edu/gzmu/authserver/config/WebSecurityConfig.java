@@ -1,6 +1,7 @@
 package cn.edu.gzmu.authserver.config;
 
 import cn.edu.gzmu.authserver.auth.res.AuthAccessDecisionManager;
+import cn.edu.gzmu.authserver.handler.AccessDeniedExceptionHandler;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
@@ -38,6 +40,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/oauth/login")
                 .loginProcessingUrl("/authorization/form")
+                .and()
+                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler())
                 .and()
                 .authorizeRequests()
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
@@ -68,4 +72,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+
+    @Bean
+    public OAuth2AccessDeniedHandler customAccessDeniedHandler(){
+        return new AccessDeniedExceptionHandler();
+    }
+
 }

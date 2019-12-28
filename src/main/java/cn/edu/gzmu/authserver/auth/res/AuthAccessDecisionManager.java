@@ -28,8 +28,11 @@ public class AuthAccessDecisionManager implements AccessDecisionManager {
                 throw new AccessDeniedException("权限不足");
             }
             // 公共资源或者通过的资源
-            if (ROLE_PUBLIC.equals(needRole) || authentication.getAuthorities().stream().anyMatch(
-                    authority -> authority.getAuthority().equals(needRole))) {
+            if (ROLE_PUBLIC.equals(needRole) || ROLE_NO_LOGIN.equals(needRole)) {
+                return;
+            }
+            if (authentication.getAuthorities().stream()
+                    .anyMatch(authority -> authority.getAuthority().equals(needRole))) {
                 return;
             }
         }

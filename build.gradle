@@ -44,17 +44,21 @@ idea {
 
 dependencies {
     implementation(
+            'net.minidev:json-smart:2.3',
+            'org.wso2.orbit.com.nimbusds:nimbus-jose-jwt:5.8.0.wso2v1',
             'org.apache.commons:commons-lang3:3.9',
             'org.apache.httpcomponents:httpclient:4.5.10',
+            'com.alibaba:druid-spring-boot-starter:1.1.21',
             'com.alibaba:fastjson:1.2.62',
             'com.alibaba:druid:1.1.21',
-            'com.alibaba:druid-spring-boot-starter:1.1.21',
             'org.jetbrains:annotations:18.0.0'
     )
     implementation(
+            'com.github.ben-manes.caffeine:caffeine',
             'org.springframework.boot:spring-boot-starter-web',
             'org.springframework.cloud:spring-cloud-starter-oauth2',
             'org.springframework.cloud:spring-cloud-starter-security',
+            'org.springframework.cloud:spring-cloud-starter-consul-discovery',
             'org.springframework.boot:spring-boot-starter-actuator',
             'org.springframework.boot:spring-boot-starter-data-jpa',
             'org.springframework.boot:spring-boot-starter-thymeleaf',
