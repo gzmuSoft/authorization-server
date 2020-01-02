@@ -1,0 +1,13 @@
+#form-card {
+    width: 30rem;
+}
+@media screen and (max-width: 450px) {
+    #form-card{
+        width: 100%;
+        height: 100%;
+        padding: 2rem !important;
+    }
+}
+.fill-height {
+    height: 100%;
+}

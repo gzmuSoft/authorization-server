@@ -2,7 +2,6 @@ package cn.edu.gzmu.authserver.service;
 
 import cn.edu.gzmu.authserver.model.entity.SysRole;
 
-import java.util.List;
 import java.util.Set;
 
 /**

@@ -18,8 +18,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 /**
  * @author <a href="https://echocow.cn">EchoCow</a>
@@ -59,7 +57,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/oauth/login")
                 .loginProcessingUrl("/authorization/form")
                 .failureHandler(authFailureHandler)
-                .successHandler(authSuccessHandler)
                 .and()
                 .logout();
     }

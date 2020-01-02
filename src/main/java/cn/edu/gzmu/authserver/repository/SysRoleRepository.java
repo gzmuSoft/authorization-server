@@ -3,7 +3,6 @@ package cn.edu.gzmu.authserver.repository;
 
 import cn.edu.gzmu.authserver.base.BaseRepository;
 import cn.edu.gzmu.authserver.model.entity.SysRole;
-import jdk.nashorn.internal.runtime.options.Option;
 
 import java.util.List;
 import java.util.Optional;

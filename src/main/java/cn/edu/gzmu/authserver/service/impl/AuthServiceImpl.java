@@ -13,13 +13,10 @@ import cn.edu.gzmu.authserver.repository.TeacherRepository;
 import cn.edu.gzmu.authserver.service.AuthService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Example;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
-import java.util.Set;
 
 /**
  * 授权处理
