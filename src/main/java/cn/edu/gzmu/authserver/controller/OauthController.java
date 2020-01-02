@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,8 +27,10 @@ public class OauthController {
     }
 
     @GetMapping("/logout")
-    public ModelAndView logoutView(String redirectUrl, Principal principal) {
-        if (StringUtils.isBlank(redirectUrl)) {
+    public ModelAndView logoutView(@RequestParam("redirect_url") String redirectUrl,
+                                   @RequestParam("client_id") String clientId,
+                                   Principal principal) {
+        if (StringUtils.isAnyBlank(redirectUrl, clientId)) {
             throw new ResourceAccessException("请求错误，缺少必要的参数");
         }
         if (Objects.isNull(principal)) {
@@ -37,6 +40,7 @@ public class OauthController {
         view.setViewName("logout");
         view.addObject("user", principal.getName());
         view.addObject("redirectUrl", redirectUrl);
+        view.addObject("clientId", clientId);
         return view;
     }
 

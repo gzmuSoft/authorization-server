@@ -21,6 +21,7 @@
               <v-spacer></v-spacer>
               <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
               <input type="hidden" name="redirectUrl" th:value="${redirectUrl}"/>
+              <input type="hidden" name="clientId" th:value="${clientId}"/>
               <v-card-actions class="mt-6">
                 <v-spacer></v-spacer>
                 <v-btn color="info" type="submit">确认退出</v-btn>
