@@ -47,6 +47,10 @@ spring:
     password:
   application:
     name: gzmu-auth
+  session:
+    redis:
+      namespace: gzmu-auth
+    store-type: redis
 management:
   endpoints:
     web:
