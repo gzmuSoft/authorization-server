@@ -1,4 +1,4 @@
-package cn.edu.gzmu.authserver.auth;
+package cn.edu.gzmu.authserver.service.impl;
 
 import cn.edu.gzmu.authserver.auth.email.EmailUserDetailsService;
 import cn.edu.gzmu.authserver.auth.sms.SmsUserDetailsService;
@@ -7,6 +7,7 @@ import cn.edu.gzmu.authserver.model.entity.SysRole;
 import cn.edu.gzmu.authserver.model.entity.SysUser;
 import cn.edu.gzmu.authserver.model.exception.ResourceNotFoundException;
 import cn.edu.gzmu.authserver.repository.SysUserRepository;
+import cn.edu.gzmu.authserver.service.SysRoleService;
 import cn.edu.gzmu.authserver.validate.impl.AbstractValidateCodeProcessor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,9 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static cn.edu.gzmu.authserver.model.constant.UserStatus.isEnable;
+import static cn.edu.gzmu.authserver.model.constant.UserStatus.isLocked;
+
 /**
  * 用户服务，根据不同的策略查询不同的用户。
  * <p>通过实现不同的接口完成认证</p>
@@ -39,6 +43,7 @@ import java.util.stream.Collectors;
 public class UserDetailsServiceImpl implements UserDetailsService, SmsUserDetailsService, EmailUserDetailsService {
 
     private final @NonNull SysUserRepository sysUserRepository;
+    private final @NonNull SysRoleService sysRoleService;
 
     /**
      * 通过用户名查找用户，这是对密码登录的仅有支持。
@@ -101,26 +106,13 @@ public class UserDetailsServiceImpl implements UserDetailsService, SmsUserDetail
      */
     private User loadUser(Supplier<Optional<SysUser>> load) {
         SysUser sysUser = load.get().orElseThrow(() -> new UsernameNotFoundException("用户 %s 不存在"));
-        Set<SysRole> sysRoles = sysUser.getRoles();
+        Set<SysRole> sysRoles = sysRoleService.findAllByRoles(sysUser.getRoles());
         List<SimpleGrantedAuthority> authorities = sysRoles.stream()
                 .map(sysRole -> new SimpleGrantedAuthority(sysRole.getName()))
                 .collect(Collectors.toList());
-        return new User(sysUser.getName(), sysUser.getPwd(),sysUser.getIsEnable(), true, true,
-                sysUser.getStatus() == 1, authorities);
+        return new User(sysUser.getName(), sysUser.getPassword(),
+                !isEnable(sysUser.getStatus()), true, true,
+                !isLocked(sysUser.getStatus()), authorities);
     }
-
-//    /**
-//     * 社交登录，暂时未做
-//     *
-//     * @param userId 通过 oauth2 获取到的用户 id
-//     * @return 用户信息
-//     * @throws UsernameNotFoundException 用户未找到
-//     */
-//    @Override
-//    public SocialUserDetails loadUserByUserId(String userId) throws UsernameNotFoundException {
-//        log.debug("social login user: {}", userId);
-//        return new SocialUser(userId, passwordEncoder.encode("123456"),
-//                AuthorityUtils.commaSeparatedStringToAuthorityList("admin,ROLE_user"));
-//    }
 
 }

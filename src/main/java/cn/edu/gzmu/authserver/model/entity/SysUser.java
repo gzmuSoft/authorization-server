@@ -1,6 +1,7 @@
 package cn.edu.gzmu.authserver.model.entity;
 
 import cn.edu.gzmu.authserver.base.BaseEntity;
+import cn.edu.gzmu.authserver.model.constant.UserStatus;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import static javax.persistence.EnumType.STRING;
+
 /**
  * @author echo
  * @version 1.0.0
@@ -22,7 +25,7 @@ import java.util.Set;
 @Data
 @Table(name = "sys_user")
 @Entity(name = "sys_user")
-@Where(clause = "is_enable = 1")
+@Where(clause = "is_enable = true")
 @ToString(callSuper = true, exclude = "roles")
 @EqualsAndHashCode(callSuper = true, exclude = "roles")
 @Accessors(chain = true)
@@ -32,22 +35,29 @@ public class SysUser extends BaseEntity implements Serializable {
      * 密码
      */
     @JSONField(serialize = false)
-    @javax.validation.constraints.NotNull(message = "pwd 密码 为必填项")
-    @Size(max = 255, message = "pwd 不能大于 255 位")
+    @javax.validation.constraints.NotNull(message = "password 密码 为必填项")
+    @Size(max = 255, message = "password 不能大于 255 位")
     @com.fasterxml.jackson.annotation.JsonIgnore
-    private java.lang.String pwd;
+    private java.lang.String password;
 
     /**
      * 1：正常、2：锁定一小时、3：禁用
      */
+    @Enumerated(STRING)
     @javax.validation.constraints.NotNull(message = "status 1：正常、2：锁定一小时、3：禁用 为必填项")
-    private java.lang.Integer status;
+    private UserStatus status;
 
     /**
      * 图标
      */
-    @Size(max = 255, message = "icon 不能大于 255 位")
-    private java.lang.String icon;
+    @Size(max = 255, message = "image 不能大于 255 位")
+    private java.lang.String image;
+
+    /**
+     * 头像
+     */
+    @Size(max = 255, message = "avatar 不能大于 255 位")
+    private java.lang.String avatar;
 
     /**
      * 电子邮箱

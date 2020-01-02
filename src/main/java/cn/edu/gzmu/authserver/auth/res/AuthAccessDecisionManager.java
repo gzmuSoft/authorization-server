@@ -23,16 +23,21 @@ public class AuthAccessDecisionManager implements AccessDecisionManager {
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
         for (ConfigAttribute configAttribute : configAttributes) {
             String needRole = configAttribute.getAttribute();
-            //  对于不允许访问的资源
             if (ROLE_NO_AUTH.equals(needRole)) {
                 throw new AccessDeniedException("权限不足");
             }
-            // 公共资源或者通过的资源
-            if (ROLE_PUBLIC.equals(needRole) || ROLE_NO_LOGIN.equals(needRole)) {
+            // 如果是 ROLE_NO_LOGIN 资源且是匿名用户，放行
+            if (ROLE_NO_LOGIN.equals(needRole)
+                    && roleCondition(authentication, ROLE_ANONYMOUS)) {
                 return;
             }
-            if (authentication.getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equals(needRole))) {
+            // 如果是 ROLE_PUBLIC 资源且不是匿名用户，放行
+            if (ROLE_PUBLIC.equals(needRole)
+                    && !roleCondition(authentication, ROLE_ANONYMOUS)) {
+                return;
+            }
+            // 符合条件的，放行
+            if (roleCondition(authentication, needRole)) {
                 return;
             }
         }
@@ -47,5 +52,10 @@ public class AuthAccessDecisionManager implements AccessDecisionManager {
     @Override
     public boolean supports(Class<?> clazz) {
         return true;
+    }
+
+    private Boolean roleCondition(Authentication authentication, String role) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase(role));
     }
 }

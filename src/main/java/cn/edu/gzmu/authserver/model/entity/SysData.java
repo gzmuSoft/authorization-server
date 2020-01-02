@@ -22,7 +22,7 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 @Table(name = "sys_data")
 @Entity(name = "sys_data")
-@Where(clause = "is_enable = 1")
+@Where(clause = "is_enable = true")
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class SysData extends BaseEntity implements Serializable {

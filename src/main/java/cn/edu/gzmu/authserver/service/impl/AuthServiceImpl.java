@@ -1,18 +1,25 @@
-package cn.edu.gzmu.authserver.auth;
+package cn.edu.gzmu.authserver.service.impl;
 
+import cn.edu.gzmu.authserver.model.constant.EntityType;
 import cn.edu.gzmu.authserver.model.entity.Student;
 import cn.edu.gzmu.authserver.model.entity.SysData;
+import cn.edu.gzmu.authserver.model.entity.SysRole;
 import cn.edu.gzmu.authserver.model.entity.SysUser;
 import cn.edu.gzmu.authserver.model.exception.ResourceExistException;
 import cn.edu.gzmu.authserver.model.exception.ResourceNotFoundException;
 import cn.edu.gzmu.authserver.repository.StudentRepository;
 import cn.edu.gzmu.authserver.repository.SysUserRepository;
+import cn.edu.gzmu.authserver.repository.TeacherRepository;
+import cn.edu.gzmu.authserver.service.AuthService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Example;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
+import java.util.Set;
 
 /**
  * 授权处理
@@ -22,13 +29,15 @@ import org.springframework.util.Assert;
  */
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthServiceImpl implements AuthService {
     private final @NonNull SysUserRepository sysUserRepository;
     private final @NonNull StudentRepository studentRepository;
+    private final @NonNull TeacherRepository teacherRepository;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-    Object register(SysUser user, Student student, SysData school) {
+    @Override
+    public Object register(SysUser user, Student student, SysData school) {
         Student exist = studentRepository.findById(student.getId()).orElseThrow(() ->
                 new ResourceNotFoundException("学生资源不存在！"));
         Assert.isNull(exist.getUserId(), "当前学生已注册！");
@@ -39,13 +48,34 @@ public class AuthService {
         if (existUser(user)) {
             throw new ResourceExistException("用户已经存在！");
         }
-        user.setPwd(bCryptPasswordEncoder.encode(user.getPwd()));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         SysUser save = sysUserRepository.save(user);
         exist.setUserId(save.getId());
         studentRepository.save(exist);
         return save;
     }
 
+    /**
+     * 获取用户详细信息
+     *
+     * @return 结果
+     */
+    @Override
+    public Object userDetails(Long userId) {
+        Object result = null;
+//        for (SysRole role : roles) {
+//            if (EntityType.isAdmin(role.getName())) {
+//                result = "ROLE_ADMIN";
+//            }
+//            if (EntityType.isTeacher(role.getName())) {
+//                result = teacherRepository.findFirstByUserId(sysUser.getId()).orElse(null);
+//            }
+//            if (EntityType.isStudent(role.getName())) {
+//                result = studentRepository.findFirstByUserId(sysUser.getId()).orElse(null);
+//            }
+//        }
+        return result;
+    }
 
     /**
      * 是否存在用户
@@ -71,4 +101,5 @@ public class AuthService {
         sysUser.setPhone(user.getPhone());
         return sysUserRepository.exists(Example.of(sysUser));
     }
+
 }

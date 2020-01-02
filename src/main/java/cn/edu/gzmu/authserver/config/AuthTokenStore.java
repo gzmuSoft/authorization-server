@@ -1,6 +1,6 @@
 package cn.edu.gzmu.authserver.config;
 
-import cn.edu.gzmu.authserver.auth.ClientDetailsServiceImpl;
+import cn.edu.gzmu.authserver.service.impl.ClientDetailsServiceImpl;
 import cn.edu.gzmu.authserver.model.properties.Oauth2Properties;
 import cn.edu.gzmu.authserver.repository.ClientDetailsRepository;
 import lombok.NonNull;

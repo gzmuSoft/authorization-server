@@ -25,7 +25,7 @@ import java.util.Set;
 @Data
 @Table(name = "sys_res")
 @Entity(name = "sys_res")
-@Where(clause = "is_enable = 1")
+@Where(clause = "is_enable = true")
 @ToString(callSuper = true, exclude = "roles")
 @EqualsAndHashCode(callSuper = true, exclude = "roles")
 @Accessors(chain = true)

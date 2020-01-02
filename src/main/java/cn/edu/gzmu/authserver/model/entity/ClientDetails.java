@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @ToString(callSuper = true)
 @Table(name = "client_details")
 @Entity(name = "client_details")
-@Where(clause = "is_enable = 1")
+@Where(clause = "is_enable = true")
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class ClientDetails extends BaseEntity implements Serializable {

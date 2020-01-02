@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.KeyPair;
-import java.security.Principal;
 import java.security.interfaces.RSAPublicKey;
 
 /**
@@ -27,7 +26,7 @@ public class JwkEndpoint {
 
     @GetMapping("/.well-known/jwks.json")
     @ResponseBody
-    public JSONObject getKey(Principal principal) {
+    public JSONObject getKey() {
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAKey key = new RSAKey.Builder(publicKey).build();
         return new JWKSet(key).toJSONObject();

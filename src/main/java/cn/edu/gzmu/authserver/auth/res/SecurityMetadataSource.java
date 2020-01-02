@@ -3,8 +3,9 @@ package cn.edu.gzmu.authserver.auth.res;
 import cn.edu.gzmu.authserver.model.constant.HttpMethod;
 import cn.edu.gzmu.authserver.model.entity.SysRes;
 import cn.edu.gzmu.authserver.model.entity.SysRole;
-import cn.edu.gzmu.authserver.repository.SysResRepository;
 import cn.edu.gzmu.authserver.repository.SysUserRepository;
+import cn.edu.gzmu.authserver.service.SysResService;
+import cn.edu.gzmu.authserver.service.SysRoleService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,10 +46,10 @@ import static cn.edu.gzmu.authserver.model.constant.SecurityConstants.*;
 @Component
 @RequiredArgsConstructor
 public class SecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
-    private final @NonNull SysResRepository sysResRepository;
+    private final @NonNull SysResService sysResService;
+    private final @NonNull SysRoleService sysRoleService;
     private final @NonNull AuthToken authToken;
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
-
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
@@ -59,7 +60,7 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
         }
         String method = httpRequest.getMethod();
         String requestUrl = httpRequest.getServletPath();
-        List<SysRes> sysRes = sysResRepository.findAll();
+        List<SysRes> sysRes = sysResService.findAll();
         for (SysRes res : sysRes) {
             // 路径匹配
             if (!antPathMatcher.match(res.getUrl(), requestUrl)) {
@@ -69,26 +70,24 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
             if (!HttpMethod.ALL.match(res.getMethod()) && !method.equals(res.getMethod())) {
                 continue;
             }
-            Set<SysRole> roles = res.getRoles();
+            Set<SysRole> roles = sysRoleService.findAllByRoles(res.getRoles());
             if (CollectionUtils.isEmpty(roles)) {
                 continue;
             }
             // 获取匹配当前资源的角色 id 表
-            List<String> sysRoleNames = roles.stream().map(SysRole::getName).collect(Collectors.toList());
+            List<String> sysRoleNames = roles.stream()
+                    .map(SysRole::getName)
+                    .collect(Collectors.toList());
             if (sysRoleNames.contains(ROLE_PUBLIC)) {
                 return SecurityConfig.createList(ROLE_PUBLIC);
             } else if (sysRoleNames.contains(ROLE_NO_LOGIN)) {
                 return SecurityConfig.createList(ROLE_NO_LOGIN);
+            } else {
+                return SecurityConfig.createListFromCommaDelimitedString(
+                        String.join(",", sysRoleNames));
             }
-            // 如果当前匹配的角色中含有公共资源的 id
-            List<SysRole> matchRoles = roles.stream().filter(
-                    sysRole -> sysRoleNames.contains(sysRole.getName())).collect(Collectors.toList());
-            if (matchRoles.size() == 0) {
-                continue;
-            }
-            return SecurityConfig.createListFromCommaDelimitedString(matchRoles.stream()
-                    .map(SysRole::getName).collect(Collectors.joining(",")));
         }
+        log.debug("{} {} 权限不足", method, requestUrl);
         return SecurityConfig.createList(ROLE_NO_AUTH);
     }
 
@@ -108,6 +107,11 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
     }
 
 
+    /**
+     * 网页登录的时候，是使用模板引擎的非前后端分离方案
+     * 所以他不会将自己作为资源服务器去请求解析token，
+     * 在这里需要手动解析一下 token，并设置到安全上下文中
+     */
     @Component
     @RequiredArgsConstructor
     protected static class AuthToken {

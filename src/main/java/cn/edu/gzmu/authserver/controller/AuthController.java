@@ -1,8 +1,9 @@
-package cn.edu.gzmu.authserver.auth;
+package cn.edu.gzmu.authserver.controller;
 
 import cn.edu.gzmu.authserver.model.entity.Student;
 import cn.edu.gzmu.authserver.model.entity.SysData;
 import cn.edu.gzmu.authserver.model.entity.SysUser;
+import cn.edu.gzmu.authserver.service.AuthService;
 import cn.edu.gzmu.authserver.util.VerifyParameter;
 import com.alibaba.fastjson.JSONObject;
 import lombok.NonNull;
@@ -10,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
+import java.security.Principal;
 
 /**
  * 授权信息
@@ -48,6 +51,13 @@ public class AuthController {
                         params.getObject("school", SysData.class)
                 )
         );
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("isFullyAuthenticated()")
+    public HttpEntity<?> me(Principal principal) {
+        System.out.println(principal);
+        return ResponseEntity.ok(authService.userDetails(1L));
     }
 
 }

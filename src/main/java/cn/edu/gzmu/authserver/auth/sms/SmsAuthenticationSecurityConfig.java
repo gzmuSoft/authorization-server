@@ -1,6 +1,6 @@
 package cn.edu.gzmu.authserver.auth.sms;
 
-import cn.edu.gzmu.authserver.auth.UserDetailsServiceImpl;
+import cn.edu.gzmu.authserver.service.impl.UserDetailsServiceImpl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,7 +10,6 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 /**
  * sms 授权配置

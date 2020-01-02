@@ -51,5 +51,8 @@ public interface SecurityConstants {
      * 未登录
      */
     String ROLE_NO_LOGIN = "ROLE_NO_LOGIN";
-
+    /**
+     * 匿名
+     */
+    String ROLE_ANONYMOUS = "ROLE_ANONYMOUS";
 }

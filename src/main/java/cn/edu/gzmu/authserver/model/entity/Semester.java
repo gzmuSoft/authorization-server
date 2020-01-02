@@ -23,7 +23,7 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 @Table(name = "semester")
 @Entity(name = "semester")
-@Where(clause = "is_enable = 1")
+@Where(clause = "is_enable = true")
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class Semester extends BaseEntity implements Serializable {

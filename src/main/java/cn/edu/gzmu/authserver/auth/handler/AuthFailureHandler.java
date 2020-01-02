@@ -24,7 +24,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AuthFailureHandle implements AuthenticationFailureHandler {
+public class AuthFailureHandler implements AuthenticationFailureHandler {
     private final @NonNull ObjectMapper objectMapper;
 
     @Override

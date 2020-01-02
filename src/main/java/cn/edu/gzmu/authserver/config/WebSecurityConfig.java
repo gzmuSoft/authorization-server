@@ -1,5 +1,7 @@
 package cn.edu.gzmu.authserver.config;
 
+import cn.edu.gzmu.authserver.auth.handler.AuthFailureHandler;
+import cn.edu.gzmu.authserver.auth.handler.AuthSuccessHandler;
 import cn.edu.gzmu.authserver.auth.res.AuthAccessDecisionManager;
 import cn.edu.gzmu.authserver.handler.AccessDeniedExceptionHandler;
 import lombok.NonNull;
@@ -16,6 +18,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 /**
  * @author <a href="https://echocow.cn">EchoCow</a>
@@ -29,6 +33,8 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final @NonNull FilterInvocationSecurityMetadataSource securityMetadataSource;
     private final @NonNull AuthAccessDecisionManager authAccessDecisionManager;
+    private final @NonNull AuthFailureHandler authFailureHandler;
+    private final @NonNull AuthSuccessHandler authSuccessHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -37,12 +43,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 但是至少最后是成功的而不至于是无用功
         // 然而确是没有什么太大的收获
         http
-                .formLogin()
-                .loginPage("/oauth/login")
-                .loginProcessingUrl("/authorization/form")
-                .and()
-                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler())
-                .and()
                 .authorizeRequests()
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     @Override
@@ -51,7 +51,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         o.setAccessDecisionManager(authAccessDecisionManager);
                         return o;
                     }
-                }).anyRequest().permitAll();
+                }).anyRequest().permitAll()
+                .and()
+                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler())
+                .and()
+                .formLogin()
+                .loginPage("/oauth/login")
+                .loginProcessingUrl("/authorization/form")
+                .failureHandler(authFailureHandler)
+                .successHandler(authSuccessHandler)
+                .and()
+                .logout();
     }
 
 
@@ -75,7 +85,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Bean
-    public OAuth2AccessDeniedHandler customAccessDeniedHandler(){
+    public OAuth2AccessDeniedHandler customAccessDeniedHandler() {
         return new AccessDeniedExceptionHandler();
     }
 

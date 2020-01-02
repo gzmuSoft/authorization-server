@@ -23,7 +23,7 @@ import java.util.Set;
 @Data
 @Table(name = "sys_role")
 @Entity(name = "sys_role")
-@Where(clause = "is_enable = 1")
+@Where(clause = "is_enable = true")
 @ToString(callSuper = true, exclude = "users")
 @EqualsAndHashCode(callSuper = true, exclude = "users")
 @Accessors(chain = true)

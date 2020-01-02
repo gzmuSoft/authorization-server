@@ -34,7 +34,6 @@ public class Oauth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
 
         http
                 .authorizeRequests()
-                .antMatchers("/oauth/login").permitAll()
                 .anyRequest()
                 .authenticated();
     }

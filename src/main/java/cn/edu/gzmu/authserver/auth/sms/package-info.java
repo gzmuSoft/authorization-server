@@ -12,7 +12,7 @@
  * 我们需要提供一个他的子类 {@link cn.edu.gzmu.authserver.auth.sms.SmsAuthenticationProvider}
  * 并实现接口中所有的方法，使用它来校验授权与用户信息。
  * 依然会去请求数据库，我通过实现自己写的 {@link cn.edu.gzmu.authserver.auth.sms.SmsUserDetailsService} 接口
- * 让 {@link cn.edu.gzmu.authserver.auth.UserDetailsServiceImpl} 实现其所有方法
+ * 让 {@link cn.edu.gzmu.authserver.service.impl.UserDetailsServiceImpl} 实现其所有方法
  * 通过它就可以获取到用户信息。
  * <p>
  * 最后我们需要将他交给登录成功处理器 {@link cn.edu.gzmu.authserver.auth.sms.SmsSuccessHandler}

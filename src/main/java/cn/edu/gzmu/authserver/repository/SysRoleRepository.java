@@ -7,6 +7,7 @@ import jdk.nashorn.internal.runtime.options.Option;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * SysRole Repository
@@ -24,5 +25,13 @@ public interface SysRoleRepository extends BaseRepository<SysRole, Long> {
      * @return 角色
      */
     Optional<SysRole> findFirstByName(String name);
+
+    /**
+     * 通过 id 列表查询
+     *
+     * @param ids id 列表
+     * @return 结果
+     */
+    Set<SysRole> findByIdIn(List<Long> ids);
 
 }

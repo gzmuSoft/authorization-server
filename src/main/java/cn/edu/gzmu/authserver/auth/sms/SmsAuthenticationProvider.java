@@ -1,6 +1,6 @@
 package cn.edu.gzmu.authserver.auth.sms;
 
-import cn.edu.gzmu.authserver.auth.UserDetailsServiceImpl;
+import cn.edu.gzmu.authserver.service.impl.UserDetailsServiceImpl;
 import lombok.Setter;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

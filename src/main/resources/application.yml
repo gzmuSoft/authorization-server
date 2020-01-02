@@ -5,10 +5,10 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/gzmu-auth?useUnicode=true&characterEncoding=UTF-8&useOldAliasMetadataBehavior=true&autoReconnect=true&serverTimezone=UTC
-    username: root
+#    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/gzmu
+    username: postgres
     password: 123456
     druid:
       filters: stat,wall,commonlogging
@@ -23,6 +23,10 @@ spring:
   jpa:
     open-in-view: true
     show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+#    properties:
+#      hibernate:
+#        format_sql: true
   mail:
     host: smtp.exmail.qq.com
     port: 465
