@@ -1,5 +1,6 @@
 package cn.edu.gzmu.authserver.validate.sms;
 
+import cn.edu.gzmu.authserver.model.properties.SmsConfig;
 import cn.edu.gzmu.authserver.util.SubMailUtils;
 import cn.edu.gzmu.authserver.validate.ValidateCode;
 import cn.edu.gzmu.authserver.validate.ValidateCodeConfig;
@@ -26,6 +27,7 @@ import java.time.Duration;
 public class SmsCodeSender implements ValidateCodeSender {
 
     private final @NonNull SubMailUtils subMailUtils;
+    private final @NonNull SmsConfig smsConfig;
 
     /**
      * 发送验证码
@@ -39,6 +41,13 @@ public class SmsCodeSender implements ValidateCodeSender {
         jsonObject.put("action", "登录");
         jsonObject.put("code", code.getCode());
         jsonObject.put("time", Duration.ofSeconds(code.getExpireIn()).toMinutes());
-        subMailUtils.sendActionMessage(receive, jsonObject);
+        if (smsConfig.getDev()) {
+            log.info("向 {} 发送登录验证码 {}，有效期 {} 分钟", receive, code.getCode(),
+                    Duration.ofSeconds(code.getExpireIn()).toMinutes());
+        } else {
+            log.debug("向 {} 发送登录验证码 {}，有效期 {} 分钟", receive, code.getCode(),
+                    Duration.ofSeconds(code.getExpireIn()).toMinutes());
+            subMailUtils.sendActionMessage(receive, jsonObject);
+        }
     }
 }

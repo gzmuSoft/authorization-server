@@ -2,7 +2,6 @@ package cn.edu.gzmu.authserver.model.entity;
 
 import cn.edu.gzmu.authserver.base.BaseEntity;
 import cn.edu.gzmu.authserver.model.constant.UserStatus;
-import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -32,7 +31,6 @@ public class SysUser extends BaseEntity implements Serializable {
     /**
      * 密码
      */
-    @JSONField(serialize = false)
     @javax.validation.constraints.NotNull(message = "password 密码 为必填项")
     @Size(max = 255, message = "password 不能大于 255 位")
     @com.fasterxml.jackson.annotation.JsonIgnore

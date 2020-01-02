@@ -2,6 +2,11 @@ server:
   port: 8888
 
 spring:
+  data:
+    rest:
+      base-path: /api
+      default-page-size: 10
+      sort-param-name: id
   main:
     allow-bean-definition-overriding: true
   datasource:
@@ -59,10 +64,13 @@ management:
 application:
   security:
     access-token-validity-seconds: 60
-  message:
+  sms:
+    dev: true
     app-id: 35223
     app-key: e7eede1811867421882df861a20ed26e
     action-template: RhXa91
+  email:
+    dev: true
 logging:
   level:
     cn.edu.gzmu.authserver: debug

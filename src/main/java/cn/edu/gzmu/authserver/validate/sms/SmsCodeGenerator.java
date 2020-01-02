@@ -1,6 +1,6 @@
 package cn.edu.gzmu.authserver.validate.sms;
 
-import cn.edu.gzmu.authserver.model.properties.SmsProperties;
+import cn.edu.gzmu.authserver.model.properties.SmsConfig;
 import cn.edu.gzmu.authserver.util.RandomCode;
 import cn.edu.gzmu.authserver.validate.ValidateCode;
 import cn.edu.gzmu.authserver.validate.ValidateCodeGenerator;
@@ -18,7 +18,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 @Component("smsValidateCodeGenerator")
 public class SmsCodeGenerator implements ValidateCodeGenerator {
 
-    private final @NonNull SmsProperties smsProperties;
+    private final @NonNull SmsConfig smsConfig;
 
     /**
      * 生成验证码
@@ -29,7 +29,7 @@ public class SmsCodeGenerator implements ValidateCodeGenerator {
     @Override
     public ValidateCode generate(ServletWebRequest request) {
         return new ValidateCode(
-                RandomCode.random(smsProperties.getCodeLength(), true),
-                smsProperties.getCodeExpireIn());
+                RandomCode.random(smsConfig.getCodeLength(), true),
+                smsConfig.getCodeExpireIn());
     }
 }

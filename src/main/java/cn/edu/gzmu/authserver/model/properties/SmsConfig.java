@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "application.message")
-public class MessageConfig {
+@ConfigurationProperties(prefix = "application.sms")
+public class SmsConfig {
     /**
      * app id
      */
@@ -26,4 +26,16 @@ public class MessageConfig {
      * 注册/登录 模板
      */
     private String actionTemplate;
+    /**
+     * 短信验证码长度
+     */
+    private Integer codeLength = 4;
+    /**
+     * 验证码有效期
+     */
+    private Integer codeExpireIn = 60;
+    /**
+     * 是否开发模式
+     */
+    private Boolean dev = false;
 }

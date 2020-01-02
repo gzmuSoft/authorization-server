@@ -27,7 +27,7 @@ public class Oauth2Helper {
     private final @NonNull TeacherRepository teacherRepository;
 
     public Student student() {
-        if (!hasRole(ROLE_STUDENT)) {
+        if (noRole(ROLE_STUDENT)) {
             throw new UsernameNotFoundException("找不到当前用户的学生信息");
         }
         SysUser details = (SysUser) SecurityContextHolder.getContext().getAuthentication().getDetails();
@@ -36,7 +36,7 @@ public class Oauth2Helper {
     }
 
     public Teacher teacher() {
-        if (!hasRole(ROLE_TEACHER)) {
+        if (noRole(ROLE_TEACHER)) {
             throw new UsernameNotFoundException("找不到当前用户的教师信息");
         }
         SysUser details = (SysUser) SecurityContextHolder.getContext().getAuthentication().getDetails();
@@ -44,8 +44,8 @@ public class Oauth2Helper {
                 () -> new UsernameNotFoundException("找不到当前用户的教师信息"));
     }
 
-    private boolean hasRole(String roleName) {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+    public boolean noRole(String roleName) {
+        return !SecurityContextHolder.getContext().getAuthentication().getAuthorities()
                 .stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList())
                 .contains(roleName);

@@ -25,4 +25,8 @@ public class EmailProperties {
      * 验证码有效期
      */
     private Integer codeExpireIn = 600;
+    /**
+     * 是否开发模式
+     */
+    private Boolean dev = false;
 }

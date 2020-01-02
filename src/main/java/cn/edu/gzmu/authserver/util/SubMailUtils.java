@@ -1,6 +1,6 @@
 package cn.edu.gzmu.authserver.util;
 
-import cn.edu.gzmu.authserver.model.properties.MessageConfig;
+import cn.edu.gzmu.authserver.model.properties.SmsConfig;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
@@ -28,14 +28,14 @@ import java.util.concurrent.Future;
 @Component
 public class SubMailUtils {
 
-    private final MessageConfig messageConfig;
-    private final static HttpClient HTTP_CLIENT = HttpClients.createDefault();
+    private final SmsConfig smsConfig;
+    private static final HttpClient HTTP_CLIENT = HttpClients.createDefault();
     private static final String X_SEND = "https://api.mysubmail.com/message/xsend";
     private static final String MULTI_X_SEND = "https://api.mysubmail.com/message/multixsend";
 
     @Autowired
-    public SubMailUtils(MessageConfig messageConfig) {
-        this.messageConfig = messageConfig;
+    public SubMailUtils(SmsConfig smsConfig) {
+        this.smsConfig = smsConfig;
     }
 
     /**
@@ -47,7 +47,7 @@ public class SubMailUtils {
     @Async
     public Future<String> sendActionMessage(String to, JSONObject vars) {
         HttpPost httpPost = new HttpPost(X_SEND);
-        JSONObject jsonParam = appInfo(messageConfig.getActionTemplate());
+        JSONObject jsonParam = appInfo(smsConfig.getActionTemplate());
         jsonParam.put("to", to);
         jsonParam.put("vars", vars);
         httpPost.setEntity(entityBuilder(jsonParam.toJSONString()));
@@ -62,7 +62,6 @@ public class SubMailUtils {
             log.debug(res);
             return new AsyncResult<>(res);
         } catch (IOException e) {
-            e.printStackTrace();
             log.error(e.getMessage());
             return new AsyncResult<>("短信发送失败：" + e.getMessage());
         }
@@ -70,8 +69,8 @@ public class SubMailUtils {
 
     private JSONObject appInfo(String project) {
         JSONObject param = new JSONObject();
-        param.put("appid", messageConfig.getAppId());
-        param.put("signature", messageConfig.getAppKey());
+        param.put("appid", smsConfig.getAppId());
+        param.put("signature", smsConfig.getAppKey());
         param.put("project", project);
         return param;
     }

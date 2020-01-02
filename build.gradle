@@ -64,6 +64,7 @@ dependencies {
             'org.springframework.boot:spring-boot-starter-thymeleaf',
             'org.springframework.boot:spring-boot-starter-mail',
             'org.springframework.boot:spring-boot-starter-data-redis',
+            'org.springframework.boot:spring-boot-starter-data-rest',
             'org.springframework.session:spring-session-data-redis'
     )
     annotationProcessor(

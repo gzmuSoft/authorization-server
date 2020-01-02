@@ -57,7 +57,6 @@ public class AuthController {
     @GetMapping("/me")
     @PreAuthorize("isFullyAuthenticated()")
     public HttpEntity<?> me(Principal principal) {
-        System.out.println(principal);
         if (!(principal instanceof OAuth2Authentication)) {
             return ResponseEntity.badRequest().build();
         }

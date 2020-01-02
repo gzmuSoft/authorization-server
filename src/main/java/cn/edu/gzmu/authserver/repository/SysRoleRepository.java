@@ -2,9 +2,12 @@ package cn.edu.gzmu.authserver.repository;
 
 
 import cn.edu.gzmu.authserver.base.BaseRepository;
+import cn.edu.gzmu.authserver.model.constant.AuthConstant;
 import cn.edu.gzmu.authserver.model.entity.SysRole;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +20,7 @@ import java.util.Set;
  * @version 1.0
  * @date 2019-5-7 11:05:31
  */
+@RepositoryRestResource(path = AuthConstant.SYS_ROLE)
 public interface SysRoleRepository extends BaseRepository<SysRole, Long> {
 
     /**
@@ -25,6 +29,7 @@ public interface SysRoleRepository extends BaseRepository<SysRole, Long> {
      * @param name 名
      * @return 角色
      */
+    @RestResource(path = "byName")
     Optional<SysRole> findFirstByName(String name);
 
     /**
@@ -41,6 +46,7 @@ public interface SysRoleRepository extends BaseRepository<SysRole, Long> {
      * @param userId 用户 id
      * @return 结果
      */
+    @RestResource(path = "byUserId")
     @Query(value = "select r.* from sys_user_role sur, sys_role r " +
             "where sur.user_id = (:userId) and r.id = sur.role_id and r.is_enable = true",
             nativeQuery = true)
@@ -52,6 +58,7 @@ public interface SysRoleRepository extends BaseRepository<SysRole, Long> {
      * @param resId 资源 id
      * @return 结果
      */
+    @RestResource(path = "byResId")
     @Query(value = "select r.* from sys_role_res srr, sys_role r " +
             "where srr.res_id = (:resId) and r.id = srr.role_id and r.is_enable = true",
             nativeQuery = true)
