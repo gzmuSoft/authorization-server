@@ -106,7 +106,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, SmsUserDetail
      */
     private User loadUser(Supplier<Optional<SysUser>> load) {
         SysUser sysUser = load.get().orElseThrow(() -> new UsernameNotFoundException("用户 %s 不存在"));
-        Set<SysRole> sysRoles = sysRoleService.findAllByRoles(sysUser.getRoles());
+        Set<SysRole> sysRoles = sysRoleService.findAllByUser(sysUser.getId());
         List<SimpleGrantedAuthority> authorities = sysRoles.stream()
                 .map(sysRole -> new SimpleGrantedAuthority(sysRole.getName()))
                 .collect(Collectors.toList());

@@ -70,7 +70,7 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
             if (!HttpMethod.ALL.match(res.getMethod()) && !method.equals(res.getMethod())) {
                 continue;
             }
-            Set<SysRole> roles = sysRoleService.findAllByRoles(res.getRoles());
+            Set<SysRole> roles = sysRoleService.findAllByRes(res.getId());
             if (CollectionUtils.isEmpty(roles)) {
                 continue;
             }

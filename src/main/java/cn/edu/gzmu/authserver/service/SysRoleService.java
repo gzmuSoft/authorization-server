@@ -20,4 +20,20 @@ public interface SysRoleService {
      */
     Set<SysRole> findAllByRoles(Set<SysRole> roles);
 
+    /**
+     * 通过用户id查询所有
+     *
+     * @param userId 用户id
+     * @return 结果
+     */
+    Set<SysRole> findAllByUser(Long userId);
+
+    /**
+     * 通过资源id查询所有
+     *
+     * @param resId 资源id
+     * @return 结果
+     */
+    Set<SysRole> findAllByRes(Long resId);
+
 }

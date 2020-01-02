@@ -1,7 +1,6 @@
 package cn.edu.gzmu.authserver.model.entity;
 
 import cn.edu.gzmu.authserver.base.BaseEntity;
-import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -11,8 +10,6 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author echo
@@ -23,8 +20,8 @@ import java.util.Set;
 @Table(name = "sys_role")
 @Entity(name = "sys_role")
 @Where(clause = "is_enable = true")
-@ToString(callSuper = true, exclude = "users")
-@EqualsAndHashCode(callSuper = true, exclude = "users")
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class SysRole extends BaseEntity implements Serializable {
 
@@ -45,15 +42,5 @@ public class SysRole extends BaseEntity implements Serializable {
      */
     @javax.validation.constraints.NotNull(message = "parentId 父角色编号 为必填项")
     private java.lang.Long parentId;
-
-    @JSONField(serialize = false)
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
-    private Set<SysUser> users = new HashSet<>();
-
-    @JSONField(serialize = false)
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "sys_role_res", joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "res_id"))
-    private Set<SysRes> res = new HashSet<>();
 
 }

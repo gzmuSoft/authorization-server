@@ -1,6 +1,5 @@
 package cn.edu.gzmu.authserver.service.impl;
 
-import cn.edu.gzmu.authserver.model.constant.EntityType;
 import cn.edu.gzmu.authserver.model.entity.Student;
 import cn.edu.gzmu.authserver.model.entity.SysData;
 import cn.edu.gzmu.authserver.model.entity.SysRole;
@@ -11,12 +10,18 @@ import cn.edu.gzmu.authserver.repository.StudentRepository;
 import cn.edu.gzmu.authserver.repository.SysUserRepository;
 import cn.edu.gzmu.authserver.repository.TeacherRepository;
 import cn.edu.gzmu.authserver.service.AuthService;
+import cn.edu.gzmu.authserver.service.SysRoleService;
+import com.alibaba.fastjson.JSONObject;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
+import java.util.Set;
+
+import static cn.edu.gzmu.authserver.model.constant.SecurityConstants.*;
 
 /**
  * 授权处理
@@ -27,6 +32,7 @@ import org.springframework.util.Assert;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+    private final @NonNull SysRoleService sysRoleService;
     private final @NonNull SysUserRepository sysUserRepository;
     private final @NonNull StudentRepository studentRepository;
     private final @NonNull TeacherRepository teacherRepository;
@@ -55,22 +61,37 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 获取用户详细信息
      *
+     * @param userId 用户 id
      * @return 结果
      */
     @Override
     public Object userDetails(Long userId) {
-        Object result = null;
-//        for (SysRole role : roles) {
-//            if (EntityType.isAdmin(role.getName())) {
-//                result = "ROLE_ADMIN";
-//            }
-//            if (EntityType.isTeacher(role.getName())) {
-//                result = teacherRepository.findFirstByUserId(sysUser.getId()).orElse(null);
-//            }
-//            if (EntityType.isStudent(role.getName())) {
-//                result = studentRepository.findFirstByUserId(sysUser.getId()).orElse(null);
-//            }
-//        }
+        SysUser user = sysUserRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("用户不存在")
+        );
+        Set<SysRole> roles = sysRoleService.findAllByUser(userId);
+        JSONObject result = new JSONObject();
+        for (SysRole role : roles) {
+            switch (role.getName()) {
+                case ROLE_ADMIN:
+                    result.put("isAdmin", true);
+                    break;
+                case ROLE_TEACHER:
+                    result.put("isTeacher", true);
+                    result.put("teacher", teacherRepository.findFirstByUserId(user.getId()).orElse(null));
+                    break;
+                case ROLE_STUDENT:
+                    result.put("isStudent", true);
+                    result.put("student", studentRepository.findFirstByUserId(user.getId()).orElse(null));
+                    break;
+                default:
+                    break;
+            }
+        }
+        result.put("user", user);
+        result.putIfAbsent("isAdmin", false);
+        result.putIfAbsent("isTeacher", false);
+        result.putIfAbsent("isStudent", false);
         return result;
     }
 

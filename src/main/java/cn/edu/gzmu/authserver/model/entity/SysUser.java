@@ -12,8 +12,6 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -26,8 +24,8 @@ import static javax.persistence.EnumType.STRING;
 @Table(name = "sys_user")
 @Entity(name = "sys_user")
 @Where(clause = "is_enable = true")
-@ToString(callSuper = true, exclude = "roles")
-@EqualsAndHashCode(callSuper = true, exclude = "roles")
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class SysUser extends BaseEntity implements Serializable {
 
@@ -90,11 +88,5 @@ public class SysUser extends BaseEntity implements Serializable {
      */
     @Transient
     private Teacher teacher;
-
-    @JSONField(serialize = false)
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "sys_user_role", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<SysRole> roles = new HashSet<>();
 
 }

@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,15 +25,34 @@ public class SysRoleServiceImpl implements SysRoleService {
 
     @Override
     public Set<SysRole> findAllByRoles(Set<SysRole> roles) {
-        List<@NotNull Long> ids = roles.stream()
-                .filter(role -> role.getParentId() != 0)
-                .map(SysRole::getParentId)
-                .collect(Collectors.toList());
-        if (roles.size() == 0) {
-            return roles;
-        }
-        roles.addAll(sysRoleRepository.findByIdIn(ids));
+        roles.addAll(findParentRoles(roles));
         return roles;
+    }
+
+    @Override
+    public Set<SysRole> findAllByUser(Long userId) {
+        Set<SysRole> sysRoles = sysRoleRepository.searchAllByUserId(userId);
+        sysRoles.addAll(findParentRoles(sysRoles));
+        return sysRoles;
+    }
+
+    @Override
+    public Set<SysRole> findAllByRes(Long resId) {
+        return sysRoleRepository.searchAllByResId(resId);
+    }
+
+    private Set<SysRole> findParentRoles(Set<SysRole> sysRoles) {
+        Set<SysRole> parentRoles = new HashSet<>();
+        while (true) {
+            List<Long> ids = sysRoles.stream()
+                    .filter(sysRole -> sysRole.getParentId() != 0)
+                    .map(SysRole::getId)
+                    .collect(Collectors.toList());
+            parentRoles.addAll(sysRoleRepository.findByIdIn(ids));
+            if (ids.isEmpty()) {
+                return parentRoles;
+            }
+        }
     }
 
 }

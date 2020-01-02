@@ -1,9 +1,8 @@
 package cn.edu.gzmu.authserver.auth;
 
-import cn.edu.gzmu.authserver.model.entity.SysRole;
 import cn.edu.gzmu.authserver.model.entity.SysUser;
 import cn.edu.gzmu.authserver.repository.SysUserRepository;
-import com.alibaba.fastjson.JSON;
+import cn.edu.gzmu.authserver.service.SysRoleService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +29,7 @@ import java.util.stream.Collectors;
 public class AuthTokenEnhancer implements TokenEnhancer {
 
     private final @NonNull SysUserRepository sysUserRepository;
+    private final @NonNull SysRoleService sysRoleService;
 
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
@@ -39,11 +38,9 @@ public class AuthTokenEnhancer implements TokenEnhancer {
         SysUser sysUser = sysUserRepository.findFirstByName(user.getUsername()).orElseThrow(
                 () -> new UsernameNotFoundException("用户未找到！")
         );
-        Set<SysRole> roles = sysUser.getRoles();
         additionalInfo.put("user_name", user.getUsername());
         additionalInfo.put("authorities", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
         additionalInfo.put("user_id", sysUser.getId());
-        additionalInfo.put("role_info", JSON.toJSON(roles));
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }

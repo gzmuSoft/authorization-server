@@ -3,6 +3,8 @@ package cn.edu.gzmu.authserver.repository;
 
 import cn.edu.gzmu.authserver.base.BaseRepository;
 import cn.edu.gzmu.authserver.model.entity.SysRole;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,5 +34,27 @@ public interface SysRoleRepository extends BaseRepository<SysRole, Long> {
      * @return 结果
      */
     Set<SysRole> findByIdIn(List<Long> ids);
+
+    /**
+     * 角色
+     *
+     * @param userId 用户 id
+     * @return 结果
+     */
+    @Query(value = "select r.* from sys_user_role sur, sys_role r " +
+            "where sur.user_id = (:userId) and r.id = sur.role_id and r.is_enable = true",
+            nativeQuery = true)
+    Set<SysRole> searchAllByUserId(@Param("userId") Long userId);
+
+    /**
+     * 角色
+     *
+     * @param resId 资源 id
+     * @return 结果
+     */
+    @Query(value = "select r.* from sys_role_res srr, sys_role r " +
+            "where srr.res_id = (:resId) and r.id = srr.role_id and r.is_enable = true",
+            nativeQuery = true)
+    Set<SysRole> searchAllByResId(@Param("resId") Long resId);
 
 }
