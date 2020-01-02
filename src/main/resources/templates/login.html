@@ -101,7 +101,7 @@
       },
       next () {
         if (this.window === 0) this.$refs.username.validate(true) && (this.window += 1)
-        else document.getElementById("login").submit()
+        else this.$refs.password.validate(true) && document.getElementById("login").submit()
       }
     }
   })

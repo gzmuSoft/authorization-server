@@ -1,6 +1,7 @@
 package cn.edu.gzmu.authserver.config;
 
 import cn.edu.gzmu.authserver.auth.handler.AuthFailureHandler;
+import cn.edu.gzmu.authserver.auth.handler.AuthLogoutSuccessHandler;
 import cn.edu.gzmu.authserver.auth.handler.AuthSuccessHandler;
 import cn.edu.gzmu.authserver.auth.res.AuthAccessDecisionManager;
 import cn.edu.gzmu.authserver.handler.AccessDeniedExceptionHandler;
@@ -33,6 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final @NonNull AuthAccessDecisionManager authAccessDecisionManager;
     private final @NonNull AuthFailureHandler authFailureHandler;
     private final @NonNull AuthSuccessHandler authSuccessHandler;
+    private final @NonNull AuthLogoutSuccessHandler authLogoutSuccessHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -58,7 +60,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/authorization/form")
                 .failureHandler(authFailureHandler)
                 .and()
-                .logout();
+                .logout()
+                .logoutUrl("/oauth/logout")
+                .logoutSuccessHandler(authLogoutSuccessHandler);
     }
 
 
