@@ -1,6 +1,5 @@
 package cn.edu.gzmu.authserver.controller;
 
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -29,10 +28,10 @@ public class OauthController {
     @GetMapping("/logout")
     public ModelAndView logoutView(String redirectUrl, Principal principal) {
         if (StringUtils.isBlank(redirectUrl)) {
-            throw new ResourceAccessException("资源错误，缺少必要的参数");
+            throw new ResourceAccessException("请求错误，缺少必要的参数");
         }
         if (Objects.isNull(principal)) {
-            throw new ResourceAccessException("资源错误，用户尚未登录");
+            throw new ResourceAccessException("请求错误，用户尚未登录");
         }
         ModelAndView view = new ModelAndView();
         view.setViewName("logout");
