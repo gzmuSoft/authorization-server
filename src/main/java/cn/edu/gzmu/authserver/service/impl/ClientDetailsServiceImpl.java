@@ -1,6 +1,6 @@
 package cn.edu.gzmu.authserver.service.impl;
 
-import cn.edu.gzmu.authserver.auth.ClientRegistrationService;
+import cn.edu.gzmu.authserver.service.ClientRegistrationService;
 import cn.edu.gzmu.authserver.model.entity.ClientDetails;
 import cn.edu.gzmu.authserver.repository.ClientDetailsRepository;
 import lombok.NonNull;

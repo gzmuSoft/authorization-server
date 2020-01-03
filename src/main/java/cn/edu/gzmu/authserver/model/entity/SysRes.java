@@ -44,4 +44,9 @@ public class SysRes extends BaseEntity implements Serializable {
     @Size(max = 55, message = "method 不能大于 55 位")
     private java.lang.String method;
 
+    /**
+     * 请求资源的权限域
+     */
+    @Size(max = 55, message = "scopes 不能大于 55 位")
+    private java.lang.String scopes;
 }

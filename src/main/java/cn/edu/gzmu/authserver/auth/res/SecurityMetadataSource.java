@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -26,10 +27,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cn.edu.gzmu.authserver.model.constant.SecurityConstants.*;
@@ -49,6 +47,7 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
     private final @NonNull SysResService sysResService;
     private final @NonNull SysRoleService sysRoleService;
     private final @NonNull AuthToken authToken;
+    private static final String ALL = "all";
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     @Override
@@ -61,6 +60,7 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
         String method = httpRequest.getMethod();
         String requestUrl = httpRequest.getServletPath();
         List<SysRes> sysRes = sysResService.findAll();
+        Collection<String> scopes = authToken.scopes();
         for (SysRes res : sysRes) {
             // 路径匹配
             if (!antPathMatcher.match(res.getUrl(), requestUrl)) {
@@ -68,6 +68,9 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
             }
             // 方法匹配
             if (!HttpMethod.ALL.match(res.getMethod()) && !method.equals(res.getMethod())) {
+                continue;
+            }
+            if (!containIgnoreCase(scopes, res.getScopes().toUpperCase())) {
                 continue;
             }
             Set<SysRole> roles = sysRoleService.findAllByRes(res.getId());
@@ -91,9 +94,30 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
         return SecurityConfig.createList(ROLE_NO_AUTH);
     }
 
+    /**
+     * 是否是管理员
+     *
+     * @return 结果
+     */
     private boolean isRoleAdmin() {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities()
                 .contains(new SimpleGrantedAuthority(ROLE_ADMIN));
+    }
+
+    /**
+     * 过滤一次 scopes
+     *
+     * @param scopes     scopes
+     * @param needScopes 需要的 scopes
+     * @return 是否通过
+     */
+    private Boolean containIgnoreCase(Collection<String> scopes, String needScopes) {
+        return scopes.stream()
+                .map(String::toUpperCase)
+                .anyMatch(needScopes::contains)
+                || scopes.stream()
+                .map(String::toUpperCase)
+                .anyMatch(scope -> scope.equalsIgnoreCase(ALL));
     }
 
     @Override
@@ -140,6 +164,16 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
             oAuth2Authentication.setDetails(sysUserRepository.findFirstByName(oAuth2Authentication.getName()).orElse(null));
             SecurityContextHolder.getContext().setAuthentication(oAuth2Authentication);
         }
+
+        Collection<String> scopes() {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (!(authentication instanceof OAuth2Authentication)) {
+                return Collections.emptyList();
+            }
+            OAuth2Authentication oauth2Authentication = (OAuth2Authentication) authentication;
+            return oauth2Authentication.getOAuth2Request().getScope();
+        }
+
     }
 
 }

@@ -1,4 +1,4 @@
-package cn.edu.gzmu.authserver.auth;
+package cn.edu.gzmu.authserver.service;
 
 import cn.edu.gzmu.authserver.model.entity.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
