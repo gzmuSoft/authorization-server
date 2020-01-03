@@ -70,9 +70,6 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
             if (!HttpMethod.ALL.match(res.getMethod()) && !method.equals(res.getMethod())) {
                 continue;
             }
-            if (!containIgnoreCase(scopes, res.getScopes().toUpperCase())) {
-                continue;
-            }
             Set<SysRole> roles = sysRoleService.findAllByRes(res.getId());
             if (CollectionUtils.isEmpty(roles)) {
                 continue;
@@ -85,10 +82,13 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
                 return SecurityConfig.createList(ROLE_PUBLIC);
             } else if (sysRoleNames.contains(ROLE_NO_LOGIN)) {
                 return SecurityConfig.createList(ROLE_NO_LOGIN);
-            } else {
-                return SecurityConfig.createListFromCommaDelimitedString(
-                        String.join(",", sysRoleNames));
             }
+            if (!containIgnoreCase(scopes, res.getScopes().toUpperCase())) {
+                continue;
+            }
+            return SecurityConfig.createListFromCommaDelimitedString(
+                    String.join(",", sysRoleNames));
+
         }
         log.debug("{} {} 权限不足", method, requestUrl);
         return SecurityConfig.createList(ROLE_NO_AUTH);

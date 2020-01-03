@@ -75,6 +75,7 @@ logging:
   level:
     cn.edu.gzmu.authserver: debug
     org.springframework.security: debug
-    org.springframework.context.support.[PostProcessorRegistrationDelegate$BeanPostProcessorChecker]: WARN
+    org.springframework.boot.actuate.endpoint.EndpointId: error
+    org.springframework.context.support.[PostProcessorRegistrationDelegate$BeanPostProcessorChecker]: warn
   file:
     name: logs/auth-server.log
