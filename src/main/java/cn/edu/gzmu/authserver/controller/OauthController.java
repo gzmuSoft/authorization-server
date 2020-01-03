@@ -1,7 +1,6 @@
 package cn.edu.gzmu.authserver.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,12 +26,10 @@ public class OauthController {
     }
 
     @GetMapping("/logout")
-    public ModelAndView logoutView(@RequestParam("redirect_url") String redirectUrl,
-                                   @RequestParam("client_id") String clientId,
-                                   Principal principal) {
-        if (StringUtils.isAnyBlank(redirectUrl, clientId)) {
-            throw new ResourceAccessException("请求错误，缺少必要的参数");
-        }
+    public ModelAndView logoutView(
+            @RequestParam("redirect_url") String redirectUrl,
+            @RequestParam(name = "client_id", required = false) String clientId,
+            Principal principal) {
         if (Objects.isNull(principal)) {
             throw new ResourceAccessException("请求错误，用户尚未登录");
         }

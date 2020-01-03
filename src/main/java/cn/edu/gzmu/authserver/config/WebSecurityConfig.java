@@ -59,6 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/oauth/login")
                 .loginProcessingUrl("/authorization/form")
                 .failureHandler(authFailureHandler)
+                .successHandler(authSuccessHandler)
                 .and()
                 .logout()
                 .logoutUrl("/oauth/logout")
