@@ -125,7 +125,7 @@ public class Teacher extends BaseEntity implements Serializable {
     /**
      * 是否学术学科带头人
      */
-    private java.lang.Byte isAcademicLeader;
+    private java.lang.Boolean isAcademicLeader = false;
 
     /**
      * 所属学科门类
