@@ -10,7 +10,7 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-#    type: com.alibaba.druid.pool.DruidDataSource
+    type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/gzmu
     username: postgres

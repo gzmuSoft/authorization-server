@@ -1,5 +1,6 @@
 plugins {
     id 'org.springframework.boot' version '2.2.2.RELEASE'
+    id "org.hidetake.ssh" version "2.10.1"
     id 'java'
 }
 
@@ -90,4 +91,37 @@ dependencyManagement {
 
 test {
     useJUnitPlatform()
+}
+
+remotes {
+    cloud {
+        host = ''
+        user = ''
+        identity = file("${System.properties['user.home']}/")
+    }
+}
+
+task copy(dependsOn: bootJar) {
+    doLast {
+        ssh.run {
+            session(remotes.cloud) {
+                def result = execute 'rm -rf gzmu-auth/auth-server-*.jar'
+                println "delete exist jar ${result}"
+                println 'copy jar'
+                put from: "${buildDir.toString()}/libs/auth-server-${version}.jar", into: "/root/gzmu-auth"
+                println "copy ok"
+            }
+        }
+    }
+}
+
+task restart(dependsOn: copy) {
+    doLast {
+        ssh.run {
+            session(remotes.cloud) {
+                println 'restart service'
+                execute "sudo systemctl restart ${artifacts}"
+            }
+        }
+    }
 }
