@@ -120,7 +120,7 @@ task restart(dependsOn: copy) {
         ssh.run {
             session(remotes.cloud) {
                 println 'restart service'
-                execute "sudo systemctl restart ${artifacts}"
+                execute "systemctl restart gzmu-auth"
             }
         }
     }
