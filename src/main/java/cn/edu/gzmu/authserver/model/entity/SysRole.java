@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Where;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -23,7 +24,7 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-public class SysRole extends BaseEntity implements Serializable {
+public class SysRole extends BaseEntity implements GrantedAuthority, Serializable {
 
     /**
      * 描述
@@ -43,4 +44,8 @@ public class SysRole extends BaseEntity implements Serializable {
     @javax.validation.constraints.NotNull(message = "parentId 父角色编号 为必填项")
     private java.lang.Long parentId;
 
+    @Override
+    public String getAuthority() {
+        return getName();
+    }
 }

@@ -1,7 +1,9 @@
 package cn.edu.gzmu.authserver.auth;
 
+import cn.edu.gzmu.authserver.model.entity.SysRole;
 import cn.edu.gzmu.authserver.model.entity.SysUser;
 import cn.edu.gzmu.authserver.repository.SysUserRepository;
+import com.alibaba.fastjson.JSONObject;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static cn.edu.gzmu.authserver.model.constant.SecurityConstants.*;
 
 /**
  * 令牌增强，用于扩展
@@ -38,12 +42,22 @@ public class AuthTokenEnhancer implements TokenEnhancer {
         );
         additionalInfo.put("user_name", user.getUsername());
         additionalInfo.put("authorities", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        additionalInfo.put("roles", user.getAuthorities().stream().map(r -> (SysRole) r)
+                .map(r -> {
+                    JSONObject role = new JSONObject();
+                    role.put("id", r.getId());
+                    role.put("name", r.getName());
+                    return role;
+                }).collect(Collectors.toList())
+        );
         additionalInfo.put("sub", user.getUsername());
         additionalInfo.put("user_id", sysUser.getId());
-        // A timestamp indicating when the token was issued
         additionalInfo.put("iat", (System.currentTimeMillis()) / 1000L);
-        // A timestamp indicating when the token is not to be used before
-        additionalInfo.put("nbf", (System.currentTimeMillis()) / 1000L + accessToken.getExpiresIn());
+        additionalInfo.put("nbf", (System.currentTimeMillis()) / 1000L);
+        additionalInfo.put("is_student", user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).anyMatch(ROLE_STUDENT::equals));
+        additionalInfo.put("is_teacher", user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).anyMatch(ROLE_TEACHER::equals));
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }
