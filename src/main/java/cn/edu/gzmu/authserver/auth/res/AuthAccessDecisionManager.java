@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import static cn.edu.gzmu.authserver.model.constant.SecurityConstants.*;
 
@@ -26,9 +27,8 @@ public class AuthAccessDecisionManager implements AccessDecisionManager {
             if (ROLE_NO_AUTH.equals(needRole)) {
                 throw new AccessDeniedException("权限不足");
             }
-            // 如果是 ROLE_NO_LOGIN 资源且是匿名用户，放行
-            if (ROLE_NO_LOGIN.equals(needRole)
-                    && roleCondition(authentication, ROLE_ANONYMOUS)) {
+            // 如果是 ROLE_NO_LOGIN 资源，放行
+            if (ROLE_NO_LOGIN.equals(needRole)) {
                 return;
             }
             // 如果是 ROLE_PUBLIC 资源且不是匿名用户，放行
@@ -56,6 +56,8 @@ public class AuthAccessDecisionManager implements AccessDecisionManager {
 
     private Boolean roleCondition(Authentication authentication, String role) {
         return authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase(role));
+                .anyMatch(authority ->
+                        Objects.nonNull(authority.getAuthority())
+                        && authority.getAuthority().equalsIgnoreCase(role));
     }
 }
