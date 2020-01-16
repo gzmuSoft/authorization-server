@@ -5,8 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
 import java.util.Objects;
@@ -31,7 +31,7 @@ public class OauthController {
             @RequestParam(name = "client_id", required = false) String clientId,
             Principal principal) {
         if (Objects.isNull(principal)) {
-            throw new ResourceAccessException("请求错误，用户尚未登录");
+            return new ModelAndView(new RedirectView(redirectUrl));
         }
         ModelAndView view = new ModelAndView();
         view.setViewName("logout");
