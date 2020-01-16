@@ -3,7 +3,6 @@ package cn.edu.gzmu.authserver.service.impl;
 import cn.edu.gzmu.authserver.auth.email.EmailUserDetailsService;
 import cn.edu.gzmu.authserver.auth.sms.SmsUserDetailsService;
 import cn.edu.gzmu.authserver.config.Oauth2AuthorizationServerConfig;
-import cn.edu.gzmu.authserver.model.entity.SysRole;
 import cn.edu.gzmu.authserver.model.entity.SysUser;
 import cn.edu.gzmu.authserver.model.exception.ResourceNotFoundException;
 import cn.edu.gzmu.authserver.repository.SysUserRepository;
@@ -12,15 +11,17 @@ import cn.edu.gzmu.authserver.validate.impl.AbstractValidateCodeProcessor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static cn.edu.gzmu.authserver.model.constant.UserStatus.isEnable;
 import static cn.edu.gzmu.authserver.model.constant.UserStatus.isLocked;
@@ -103,10 +104,12 @@ public class UserDetailsServiceImpl implements UserDetailsService, SmsUserDetail
      */
     private User loadUser(Supplier<Optional<SysUser>> load) {
         SysUser sysUser = load.get().orElseThrow(() -> new UsernameNotFoundException("用户 %s 不存在"));
-        Set<SysRole> sysRoles = sysRoleService.findAllByUser(sysUser.getId());
+        List<SimpleGrantedAuthority> authorities = sysRoleService.findAllByUser(sysUser.getId()).stream()
+                .map(sysRole -> new SimpleGrantedAuthority(sysRole.getName()))
+                .collect(Collectors.toList());
         return new User(sysUser.getName(), sysUser.getPassword(),
                 !isEnable(sysUser.getStatus()), true, true,
-                !isLocked(sysUser.getStatus()), sysRoles);
+                !isLocked(sysUser.getStatus()), authorities);
     }
 
 }
