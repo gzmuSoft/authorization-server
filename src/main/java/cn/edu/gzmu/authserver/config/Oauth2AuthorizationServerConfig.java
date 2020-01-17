@@ -58,7 +58,8 @@ public class Oauth2AuthorizationServerConfig extends AuthorizationServerConfigur
             .tokenStore(jwtTokenStore)
             .tokenStore(tokenStore)
             .tokenEnhancer(tokenEnhancerChain)
-            .userDetailsService(userDetailsService);
+            .userDetailsService(userDetailsService)
+            .reuseRefreshTokens(false);
         endpoints.tokenGranter(tokenGranter(endpoints));
     }
 
