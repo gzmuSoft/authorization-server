@@ -12,34 +12,28 @@ v1.0, 2019-06-19
 
 - `sys_user` 用户表
 - `sys_role` 角色表
+- `sys_res` 资源表
 - `sys_user_role` 用户角色关联表
+- `sys_role_res` 角色资源关联表
 - `sys_data` 数据表
+- `client_details` OAuth2 客户端信息
 - `student` 学生信息表
 - `teacher` 教师表
-
-这几张表包括了整个用户的授权信息，同时对于 `OAuth2` 的令牌信息，使用 `mysql` 数据进行存储，表结构来自于 https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql[github] ，主要有如下 7 张表
-
-- `oauth_access_token` 生成的token
-- `oauth_client_details` 客户端信息
-- `oauth_code` 生成的授权码
-- `oauth_refresh_token` 刷新token
-- `oauth_approvals` 授权记录
-- `ClientDetails` 定制客户端信息，暂时先用官方给的不去自定义。
 
 === 任务
 
 贵州民族大学授权服务器，专门用来为我校应用提供授权服务，使用 spring security oauth 进行完成，完成进度：
 
-- [x] 基本授权模式：密码认证
+- [x] 密码模式、授权码模式
 - [x] 手机验证码认证授权
 - [x] 手机/邮箱验证码注册
 - [x] 多应用认证授权服务器
 - [x] jwt 信息非对称密钥加密
 - [x] jwt 信息认证完整性填充
 - [x] SSO 认证授权服务器
-- [ ] 单元测试完善
 - [x] 微服务注册
 - [ ] 高并发处理
+- [ ] 集成测试完善
 
 === 授权服务器
 
