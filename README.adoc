@@ -36,9 +36,9 @@ v1.0, 2019-06-19
 - [x] 多应用认证授权服务器
 - [x] jwt 信息加密
 - [x] jwt 信息认证完整性填充
-- [ ] SSO 认证授权服务器
+- [x] SSO 认证授权服务器
 - [ ] 单元测试完善
-- [ ] 微服务注册
+- [x] 微服务注册
 - [ ] 高并发处理
 
 === 授权服务器
@@ -49,6 +49,7 @@ v1.0, 2019-06-19
 - 构建工具： gradle 5
 - 授权协议： OAuth2
 - 核心框架： spring security oauth
+- 服务发现： spring cloud consul
 - 数据缓存： redis 5
 - 邮件模板： thymeleaf
 - 应用监控： actuator + druid
