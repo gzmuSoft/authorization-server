@@ -20,6 +20,10 @@ v1.0, 2019-06-19
 - `student` 学生信息表
 - `teacher` 教师表
 
+授权码模式示例
+
+image::https://resources.echocow.cn/file/2020/01/20logout.gif[logout]
+
 === 任务
 
 贵州民族大学授权服务器，专门用来为我校应用提供授权服务，使用 spring security oauth 进行完成，完成进度：
