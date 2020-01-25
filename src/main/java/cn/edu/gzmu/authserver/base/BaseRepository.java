@@ -1,6 +1,6 @@
 package cn.edu.gzmu.authserver.base;
 
-import com.sun.istack.NotNull;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,6 +26,15 @@ import java.util.List;
 @NoRepositoryBean
 @SuppressWarnings({"all", "uncheck"})
 public interface BaseRepository<T extends BaseEntity, ID> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
+
+    /**
+     * 获取所有
+     *
+     * @return list
+     */
+    @RestResource(path = "all", rel = "all")
+    @Query(value = "select * from #{#entityName}", nativeQuery = true)
+    List<T> searchAll();
 
     /**
      * 查询所有数据
