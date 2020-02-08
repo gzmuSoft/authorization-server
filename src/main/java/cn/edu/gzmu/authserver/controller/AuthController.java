@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,7 @@ import java.security.Principal;
 public class AuthController {
 
     private final @NonNull AuthService authService;
+    private final @NonNull PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
     @VerifyParameter(
@@ -63,6 +65,16 @@ public class AuthController {
         OAuth2Authentication authentication = (OAuth2Authentication) principal;
         SysUser details = (SysUser) authentication.getDetails();
         return ResponseEntity.ok(authService.userDetails(details.getId()));
+    }
+
+    @GetMapping("/password")
+    public HttpEntity<?> password(@RequestParam String password) {
+        return ResponseEntity.ok(passwordEncoder.encode(password));
+    }
+
+    @GetMapping("/match")
+    public HttpEntity<?> match(@RequestParam String password, @RequestParam String encode) {
+        return ResponseEntity.ok(passwordEncoder.matches(password, encode));
     }
 
 }
