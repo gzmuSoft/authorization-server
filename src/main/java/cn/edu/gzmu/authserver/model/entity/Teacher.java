@@ -62,20 +62,19 @@ public class Teacher extends BaseEntity implements Serializable {
     /**
      * 民族
      */
-    @Size(max = 255, message = "nation 不能大于 255 位")
-    private java.lang.String nation;
+    private java.lang.Long nation;
 
     /**
      * 学位
      */
     @Size(max = 255, message = "degree 不能大于 255 位")
-    private java.lang.String degree;
+    private java.lang.Long degree;
 
     /**
      * 最后学历
      */
     @Size(max = 255, message = "academic 不能大于 255 位")
-    private java.lang.String academic;
+    private java.lang.Long academic;
 
     /**
      * 最后学历毕业时间

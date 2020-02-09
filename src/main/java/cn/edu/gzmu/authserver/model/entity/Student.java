@@ -97,8 +97,7 @@ public class Student  extends BaseEntity implements Serializable {
     /**
      * 最后学历
      */
-    @Size(max = 255, message = "academic 不能大于 255 位")
-    private java.lang.String academic;
+    private java.lang.Long academic;
 
     /**
      * 最后学历毕业时间
