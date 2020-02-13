@@ -114,7 +114,7 @@ public class Teacher extends BaseEntity implements Serializable {
      * 职称
      */
     @Size(max = 255, message = "profTitle 不能大于 255 位")
-    private java.lang.String profTitle;
+    private java.lang.Long profTitle;
 
     /**
      * 职称评定时间
