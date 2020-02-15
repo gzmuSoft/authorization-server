@@ -2,8 +2,8 @@
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
 
     <property name="LOG_PATH" value="./logs"/>
-    <property name="LOG_INFO_FILE" value="one-yard-info.log"/>
-    <property name="LOG_ERROR_FILE" value="one-yard-error.log"/>
+    <property name="LOG_INFO_FILE" value="auth-server.log"/>
+    <property name="LOG_ERROR_FILE" value="auth-server.log"/>
 
     <!--除去error级别的日志文件输出-->
     <appender name="FILE-INFO-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">

@@ -64,4 +64,24 @@ public interface SysRoleRepository extends BaseRepository<SysRole, Long> {
             nativeQuery = true)
     Set<SysRole> searchAllByResId(@Param("resId") Long resId);
 
+    /**
+     * 获取当前角色的所有相关角色
+     *
+     * @param roleIds 角色 ids
+     * @return 结果
+     */
+    @RestResource(path = "byRoleId")
+    @Query(value = "WITH RECURSIVE cte as (" +
+            "    SELECT * " +
+            "    FROM sys_role " +
+            "    WHERE id in (:roleIds) AND is_enable = true" +
+            "    UNION ALL " +
+            "    SELECT r.*" +
+            "    FROM sys_role r " +
+            "    JOIN cte c ON c.parent_id = r.id" +
+            "    WHERE r.is_enable = true" +
+            ") " +
+            "SELECT DISTINCT * " +
+            "FROM cte", nativeQuery = true)
+    Set<SysRole> searchAllRoleByIds(@Param("roleIds") List<Long> roleIds);
 }
