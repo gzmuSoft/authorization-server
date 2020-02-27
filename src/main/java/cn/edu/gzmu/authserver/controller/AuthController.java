@@ -11,13 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
-import java.security.Principal;
 
 /**
  * 授权信息
@@ -54,17 +51,6 @@ public class AuthController {
                         params.getObject("school", SysData.class)
                 )
         );
-    }
-
-    @GetMapping("/me")
-    @PreAuthorize("isFullyAuthenticated()")
-    public HttpEntity<?> me(Principal principal) {
-        if (!(principal instanceof OAuth2Authentication)) {
-            return ResponseEntity.badRequest().build();
-        }
-        OAuth2Authentication authentication = (OAuth2Authentication) principal;
-        SysUser details = (SysUser) authentication.getDetails();
-        return ResponseEntity.ok(authService.userDetails(details.getId()));
     }
 
     @GetMapping("/password")

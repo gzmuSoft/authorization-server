@@ -28,6 +28,10 @@ public interface AuthConstant {
      */
     String SYS_DATA = "sysData";
     /**
+     * 院校.
+     */
+    String SYS_COLLEGE = "sysCollege";
+    /**
      * 资源.
      */
     String SYS_RES = "sysRes";

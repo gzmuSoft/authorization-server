@@ -20,30 +20,22 @@
               </div>
               <v-spacer></v-spacer>
               <v-card-subtitle class="text-center subtitle-1 pt-0">
-                <p th:if="${param.error == null}">{{infoText}}</p>
-                <p th:unless="${param.error == null}" th:text="${param.error}" style="color: red;"></p>
+                <p th:if="${param.error != null}" th:text="${param.error}" style="color: red;"></p>
               </v-card-subtitle>
               <v-spacer></v-spacer>
-              <v-card-text>
-                <v-window v-model="window" style="min-height:180px">
-                  <v-window-item :key="0">
-                    <v-text-field label="用户名/手机号/邮箱" name="username" type="text" clearable :rules="usernameRules"
-                                  outlined v-model='user.username' @keyup.enter="next" ref="username" autofocus :counter="55">
-                    </v-text-field>
-                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                  </v-window-item>
-                  <v-window-item :key="1">
-                    <v-text-field label="账户密码" name="password" type="password" required clearable
-                                  outlined v-model='user.password' @keyup.enter="next" ref="password" autofocus>
-                    </v-text-field>
-                  </v-window-item>
-                </v-window>
+              <v-card-text style="height: 300px">
+                <v-text-field label="用户名/手机号/邮箱" name="username" type="text" clearable :rules="usernameRules"
+                              outlined v-model='user.username' @keyup.enter="next" ref="username" autofocus :counter="55">
+                </v-text-field>
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <v-text-field label="账户密码" name="password" type="password" required clearable :rules="passwordRules"
+                              outlined v-model='user.password' @keyup.enter="next" ref="password">
+                </v-text-field>
               </v-card-text>
               <v-card-actions>
-                <v-btn outlined color="info" @click="previous">{{previousText}}</v-btn>
+                <v-btn outlined color="info" @click="forget">忘记密码</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn color="info" type="button" @click="next" v-show="window === 0">下一步</v-btn>
-                <v-btn color="info" type="submit" @click="next" v-show="window === 1">登录</v-btn>
+                <v-btn color="info" type="submit" @click="next">登录</v-btn>
               </v-card-actions>
           </v-form>
         </v-card>
@@ -60,9 +52,6 @@
     vuetify: new Vuetify(),
     data: function () {
       return {
-        window: 0,
-        previousText: '忘记密码',
-        infoText: '使用您的帐号进行登录',
         nameText: '贵州民族大学授权中心',
         user: {
           username: null,
@@ -72,37 +61,21 @@
           v => !!v || '请输入用户名/手机号/邮箱',
           v => !!v && v.length <= 55 || '长度不合法'
         ],
-        passwordRules:[ v => !!v || '请输入密码' ]
+        passwordRules:[
+          v => !!v || '请输入密码',
+          v => !!v && v.length <= 55 && v.length >= 4 || '长度不合法'
+        ]
       }
     },
     watch: {
-      window: function (val) {
-        if (val === 0) {
-          this.infoText = '使用您的帐号进行登录'
-          this.previousText = '忘记密码'
-          this.nameText = '贵州民族大学授权中心'
-        } else if (val === 1) {
-          this.infoText = '要继续操作，请首先验证登录者是您本人'
-          this.previousText = '上一步'
-          this.nameText = this.user.username
-        }
-      }
     },
     created () {
-      this.window = 0
     },
     methods: {
-      previous() {
-        if (this.window === 0) {
-
-        } else {
-          this.window -= 1
-        }
-      },
       next () {
-        if (this.window === 0) this.$refs.username.validate(true) && (this.window += 1)
-        else this.$refs.password.validate(true) && document.getElementById("login").submit()
-      }
+        this.$refs.username.validate() && this.$refs.password.validate() && document.getElementById("login").submit()
+      },
+      forget () {}
     }
   })
 </script>

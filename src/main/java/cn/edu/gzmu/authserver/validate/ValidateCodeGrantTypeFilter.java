@@ -6,6 +6,7 @@ import cn.edu.gzmu.authserver.model.exception.ValidateCodeException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.oauth2.common.util.OAuth2Utils;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -42,8 +43,8 @@ public class ValidateCodeGrantTypeFilter extends OncePerRequestFilter {
     private final @NonNull AuthenticationFailureHandler authFailureHandle;
     private final @NonNull ValidateCodeProcessorHolder validateCodeProcessorHolder;
     private Map<String, ValidateCodeType> typeMap = new HashMap<>();
-    private RequestMatcher requestMatcher = new AntPathRequestMatcher("/oauth/token", HttpMethod.POST.name());
-
+    private RequestMatcher tokenMatcher = new AntPathRequestMatcher("/oauth/token", HttpMethod.POST.name());
+    private RequestMatcher loginMatcher = new AntPathRequestMatcher("/oauth/login", HttpMethod.POST.name());
 
     @Override
     public void afterPropertiesSet() throws ServletException {
@@ -55,9 +56,9 @@ public class ValidateCodeGrantTypeFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
-        if (requestMatcher.matches(request)) {
+    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response,
+                                    @NotNull FilterChain filterChain) throws ServletException, IOException {
+        if (tokenMatcher.matches(request) || loginMatcher.matches(request)) {
             ValidateCodeType validateCodeType = getGrantType(request);
             if (Objects.nonNull(validateCodeType)) {
                 try {
