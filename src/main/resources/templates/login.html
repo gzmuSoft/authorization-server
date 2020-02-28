@@ -24,19 +24,40 @@
               </v-card-subtitle>
               <v-spacer></v-spacer>
               <v-card-text style="height: 300px">
-                <v-text-field label="用户名/手机号/邮箱" name="username" type="text" clearable :rules="usernameRules"
-                              outlined v-model='user.username' @keyup.enter="next" ref="username" autofocus :counter="55">
-                </v-text-field>
                 <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                <v-text-field label="账户密码" name="password" type="password" required clearable :rules="passwordRules"
-                              outlined v-model='user.password' @keyup.enter="next" ref="password">
-                </v-text-field>
+                <v-window v-model="step">
+                  <v-window-item :value="1">
+                    <v-text-field label="用户名/手机号/邮箱" name="username" type="text" clearable :rules="usernameRules"
+                                  outlined v-model='user.username' @keyup.enter="next" ref="username" autofocus :counter="55">
+                    </v-text-field>
+                    <v-text-field label="账户密码" name="password" type="password" required clearable :rules="passwordRules"
+                                  outlined v-model='user.password' @keyup.enter="next" ref="password">
+                    </v-text-field>
+                  </v-window-item>
+                  <v-window-item :value="2">
+                    <input type="hidden" name="grant_type" :value="user.method"/>
+                    <input type="hidden" name="sms" :value="user.username"/>
+                    <input type="hidden" name="email" :value="user.username"/>
+                    <v-select :items="items" label="验证方式" outlined v-model="user.method" item-text="name"
+                              item-value="value"></v-select>
+                    <v-text-field label="手机号/邮箱" name="username" :append-icon="sendIcon" :rules="otherRules"
+                                  outlined v-model='user.username' @click:append="sendMessage"
+                                  ref="other" autofocus :counter="user.method === 'sms' ? 11 : 55">
+                    </v-text-field>
+                    <v-text-field label="验证码" name="code" type="text" clearable :rules="codeRules"
+                                  outlined v-model='user.code' @keyup.enter="next" ref="code" autofocus :counter="4">
+                    </v-text-field>
+                  </v-window-item>
+                </v-window>
               </v-card-text>
               <v-card-actions>
                 <v-btn outlined color="info" @click="forget">忘记密码</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn color="info" type="submit" @click="next">登录</v-btn>
               </v-card-actions>
+              <p class="text-center">
+                <v-btn text small color="primary" @click="otherLogin">验证码登录</v-btn>
+              </p>
           </v-form>
         </v-card>
         </v-col>
@@ -53,10 +74,17 @@
     data: function () {
       return {
         nameText: '贵州民族大学授权中心',
+        step: 1,
         user: {
           username: null,
-          password: null
+          password: null,
+          method: 'sms',
+          code: null
         },
+        items: [
+          { name: '手机验证码', value: 'sms' },
+          { name: '邮箱验证码', value: 'email' }
+        ],
         usernameRules:[
           v => !!v || '请输入用户名/手机号/邮箱',
           v => !!v && v.length <= 55 || '长度不合法'
@@ -64,18 +92,59 @@
         passwordRules:[
           v => !!v || '请输入密码',
           v => !!v && v.length <= 55 && v.length >= 4 || '长度不合法'
-        ]
+        ],
+        codeRules:[
+          v => !!v || '请输入验证码',
+          v => !!v && v.length === 4 || '请输入四位验证码'
+        ],
+        sendIcon: 'mdi-email-outline'
       }
     },
     watch: {
+    },
+    computed: {
+      otherRules () {
+        var pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        if (this.user.method === 'sms') return [
+          v => !!v || '请输入手机号',
+          v => !!v && v.length === 11 || '请输入11位手机号'
+        ]
+        else return [
+          v => !!v || '请输入邮箱号',
+          v => !!v && v.length <= 55 || '长度不合法',
+          v => !!v && pattern.test(v) || '邮箱不合法'
+        ]
+      }
     },
     created () {
     },
     methods: {
       next () {
-        this.$refs.username.validate() && this.$refs.password.validate() && document.getElementById("login").submit()
+        if (this.step === 1) this.$refs.username.validate() && this.$refs.password.validate() && document.getElementById("login").submit()
+        else this.$refs.other.validate() && this.$refs.code.validate() && document.getElementById("login").submit()
       },
-      forget () {}
+      forget () {},
+      otherLogin () {
+        if (this.step === 1) this.step = 2
+        else this.step = 1
+        this.user.username = null
+        this.user.password = null
+        this.$refs.login.resetValidation()
+      },
+      sendMessage () {
+        if (this.step === 1) return
+        var xmlhttp = new XMLHttpRequest()
+        xmlhttp.open('get', '/code/' + this.user.method + '?sms='+ this.user.username + '&email' + this.user.username)
+        xmlhttp.send()
+        var second = 61
+        var interval = setInterval(function () {
+          this.sendIcon = (second - 1) + 's'
+        }, 1000);
+        setTimeout(function () {
+          window.clearInterval(interval)
+          this.sendIcon = 'mdi-email-outline'
+        }, 60000)
+      }
     }
   })
 </script>

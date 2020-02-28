@@ -44,7 +44,7 @@ public class ValidateCodeGrantTypeFilter extends OncePerRequestFilter {
     private final @NonNull ValidateCodeProcessorHolder validateCodeProcessorHolder;
     private Map<String, ValidateCodeType> typeMap = new HashMap<>();
     private RequestMatcher tokenMatcher = new AntPathRequestMatcher("/oauth/token", HttpMethod.POST.name());
-    private RequestMatcher loginMatcher = new AntPathRequestMatcher("/oauth/login", HttpMethod.POST.name());
+    private RequestMatcher loginMatcher = new AntPathRequestMatcher("/authorization/form", HttpMethod.POST.name());
 
     @Override
     public void afterPropertiesSet() throws ServletException {

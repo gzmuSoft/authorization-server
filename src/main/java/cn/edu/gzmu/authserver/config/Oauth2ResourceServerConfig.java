@@ -21,7 +21,6 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @EnableResourceServer
 public class Oauth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
     private final @NonNull JwtTokenStore jwtTokenStore;
-    private final @NonNull ValidateCodeSecurityConfig validateCodeSecurityConfig;
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
@@ -30,7 +29,6 @@ public class Oauth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.apply(validateCodeSecurityConfig);
 
         http
                 .authorizeRequests()

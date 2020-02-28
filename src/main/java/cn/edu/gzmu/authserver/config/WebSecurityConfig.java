@@ -5,6 +5,7 @@ import cn.edu.gzmu.authserver.auth.handler.AuthLogoutSuccessHandler;
 import cn.edu.gzmu.authserver.auth.handler.AuthSuccessHandler;
 import cn.edu.gzmu.authserver.auth.res.AuthAccessDecisionManager;
 import cn.edu.gzmu.authserver.handler.AccessDeniedExceptionHandler;
+import cn.edu.gzmu.authserver.validate.ValidateCodeSecurityConfig;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final @NonNull AuthFailureHandler authFailureHandler;
     private final @NonNull AuthSuccessHandler authSuccessHandler;
     private final @NonNull AuthLogoutSuccessHandler authLogoutSuccessHandler;
+    private final @NonNull ValidateCodeSecurityConfig validateCodeSecurityConfig;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -42,6 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 我也不知道为什么在某些时候总会变得很无助
         // 但是至少最后是成功的而不至于是无用功
         // 然而确是没有什么太大的收获
+        http.apply(validateCodeSecurityConfig);
         http
                 .authorizeRequests()
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
