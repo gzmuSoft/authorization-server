@@ -43,8 +43,8 @@ public class ValidateCodeGrantTypeFilter extends OncePerRequestFilter {
     private final @NonNull AuthenticationFailureHandler authFailureHandle;
     private final @NonNull ValidateCodeProcessorHolder validateCodeProcessorHolder;
     private Map<String, ValidateCodeType> typeMap = new HashMap<>();
-    private RequestMatcher tokenMatcher = new AntPathRequestMatcher("/oauth/token", HttpMethod.POST.name());
-    private RequestMatcher loginMatcher = new AntPathRequestMatcher("/authorization/form", HttpMethod.POST.name());
+    private RequestMatcher requestMatcher = new AntPathRequestMatcher("/oauth/token", HttpMethod.POST.name());
+
 
     @Override
     public void afterPropertiesSet() throws ServletException {
@@ -58,7 +58,7 @@ public class ValidateCodeGrantTypeFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response,
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
-        if (tokenMatcher.matches(request) || loginMatcher.matches(request)) {
+        if (requestMatcher.matches(request)) {
             ValidateCodeType validateCodeType = getGrantType(request);
             if (Objects.nonNull(validateCodeType)) {
                 try {

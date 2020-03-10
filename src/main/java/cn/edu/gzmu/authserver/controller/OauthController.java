@@ -1,13 +1,6 @@
 package cn.edu.gzmu.authserver.controller;
 
-import cn.edu.gzmu.authserver.model.entity.SysUser;
-import cn.edu.gzmu.authserver.service.AuthService;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +19,6 @@ import java.util.Objects;
 @RequestMapping("/oauth")
 @RequiredArgsConstructor
 public class OauthController {
-    private final @NonNull AuthService authService;
 
     @GetMapping("/login")
     public String loginView() {
@@ -47,18 +39,6 @@ public class OauthController {
         view.addObject("redirectUrl", redirectUrl);
         view.addObject("clientId", clientId);
         return view;
-    }
-
-
-    @GetMapping("/me")
-    @PreAuthorize("isFullyAuthenticated()")
-    public HttpEntity<?> me(Principal principal) {
-        if (!(principal instanceof OAuth2Authentication)) {
-            return ResponseEntity.badRequest().build();
-        }
-        OAuth2Authentication authentication = (OAuth2Authentication) principal;
-        SysUser details = (SysUser) authentication.getDetails();
-        return ResponseEntity.ok(authService.userDetails(details.getId()));
     }
 
 }

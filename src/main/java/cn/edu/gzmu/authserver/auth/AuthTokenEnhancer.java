@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static cn.edu.gzmu.authserver.model.constant.SecurityConstants.*;
 
@@ -28,6 +29,8 @@ public class AuthTokenEnhancer implements TokenEnhancer {
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         final Map<String, Object> additionalInfo = new HashMap<>(6);
+        additionalInfo.put("user_name", user.getUsername());
+        additionalInfo.put("authorities", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
         additionalInfo.put("sub", user.getUsername());
         additionalInfo.put("iat", (System.currentTimeMillis()) / 1000L);
         additionalInfo.put("nbf", (System.currentTimeMillis()) / 1000L);
