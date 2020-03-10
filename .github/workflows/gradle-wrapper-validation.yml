@@ -1,0 +1,13 @@
+name: Official Gradle Wrapper Validation Action
+
+on: [push]
+
+jobs:
+  wrapper-validation:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Gradle Wrapper Validation
+      uses: gradle/wrapper-validation-action@v1
+      with:
+        allow-snapshots: true
