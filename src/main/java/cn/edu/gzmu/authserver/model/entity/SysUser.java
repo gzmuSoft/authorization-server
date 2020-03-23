@@ -11,6 +11,7 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Set;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -86,5 +87,11 @@ public class SysUser extends BaseEntity implements Serializable {
      */
     @Transient
     private Teacher teacher;
+
+    /**
+     * 角色信息
+     */
+    @Transient
+    private Set<SysRole> roles;
 
 }

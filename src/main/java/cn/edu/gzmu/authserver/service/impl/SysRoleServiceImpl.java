@@ -38,8 +38,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         List<Long> roleIds = sysRoles.stream()
                 .map(BaseEntity::getId)
                 .collect(Collectors.toList());
-        sysRoles.addAll(sysRoleRepository.searchAllRoleByIds(roleIds));
-        return sysRoles;
+        return sysRoleRepository.searchAllRoleByIds(roleIds);
     }
 
     @Override

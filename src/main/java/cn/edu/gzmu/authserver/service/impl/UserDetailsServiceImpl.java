@@ -7,6 +7,7 @@ import cn.edu.gzmu.authserver.model.entity.SysUser;
 import cn.edu.gzmu.authserver.model.exception.ResourceNotFoundException;
 import cn.edu.gzmu.authserver.repository.SysUserRepository;
 import cn.edu.gzmu.authserver.service.SysRoleService;
+import cn.edu.gzmu.authserver.service.SysUserService;
 import cn.edu.gzmu.authserver.validate.impl.AbstractValidateCodeProcessor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,8 @@ import static cn.edu.gzmu.authserver.model.constant.UserStatus.isLocked;
 @Slf4j
 @RequiredArgsConstructor
 @Component("userDetailsService")
-public class UserDetailsServiceImpl implements UserDetailsService, SmsUserDetailsService, EmailUserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService, SysUserService,
+        SmsUserDetailsService, EmailUserDetailsService {
 
     private final @NonNull SysUserRepository sysUserRepository;
     private final @NonNull SysRoleService sysRoleService;
@@ -112,4 +114,12 @@ public class UserDetailsServiceImpl implements UserDetailsService, SmsUserDetail
                 !isLocked(sysUser.getStatus()), authorities);
     }
 
+    @Override
+    public SysUser findByName(String username) {
+        SysUser sysUser = sysUserRepository.findFirstByName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("用户 %s 不存在"));
+        Set<SysRole> sysRoles = sysRoleService.findAllByUser(sysUser.getId());
+        sysUser.setRoles(sysRoles);
+        return sysUser;
+    }
 }
