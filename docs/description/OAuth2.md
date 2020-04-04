@@ -57,7 +57,7 @@ title: OAuth2
 
 在我们的应用中，涉及到了一个最为重要的东西：**角色（ROLE）**。我们使用 **RBAC(Role-based access control)** 进行我们的权限管理。 
 
-![rbac](./images/rbac.png)
+![rbac](/images/rbac.png)
 
 所以在使用 `scope` 的情况对我们来说是不适用的，这种情况下我们如何去管理权限呢？我更希望使用 OAuth2 来完全的管理我们的用户角色等信息而不是再去引入一些其他的东西，我将它与 RBAC 授权模型进行搭配使用。如何做呢？
 
