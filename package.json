@@ -12,8 +12,8 @@
   "author": "EchoCow <lizhongyue248@163.com>",
   "license": "MIT",
   "scripts": {
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "docs:dev": "npx vuepress dev docs",
+    "docs:build": "npx vuepress build docs"
   },
   "devDependencies": {
     "@vuepress/plugin-back-to-top": "^1.4.0",
