@@ -1,0 +1,17 @@
+name: CI
+on:
+  push:
+    branches: [ master ]
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: docs-deploy
+      uses: jenkey2011/vuepress-deploy@master
+      env:
+        ACCESS_TOKEN: ${{ secrets.DOCS_DEPLOY }}
+        TARGET_BRANCH: gh-pages
+        BUILD_SCRIPT: yarn && yarn docs:build
+        BUILD_DIR: docs/.vuepress/dist/
