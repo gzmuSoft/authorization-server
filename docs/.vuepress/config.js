@@ -3,9 +3,6 @@ module.exports = {
     description: '文档说明',
     port: 1111,
     base: '/authorization-server/',
-    locales: {
-        '/': {lang: 'zh-CN'}
-    },
     head: [
         ['link', {rel: 'apple-touch-icon', href: '/apple-touch-icon.png'}],
         ['link', {rel: 'icon', href: '/favicon-32x32.png'}],
