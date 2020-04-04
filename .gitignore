@@ -30,3 +30,7 @@ logs
 
 ### VS Code ###
 .vscode/
+
+### node ###
+node_modules
+docs/.vuepress/dist

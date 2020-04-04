@@ -95,9 +95,9 @@ test {
 
 remotes {
     cloud {
-        host = ''
-        user = ''
-        identity = file("${System.properties['user.home']}/")
+        host = '118.24.1.170'
+        user = 'root'
+        identity = file("${System.properties['user.home']}/公共/EchoCow")
     }
 }
 
