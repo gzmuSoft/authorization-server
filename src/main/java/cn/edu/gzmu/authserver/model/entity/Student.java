@@ -25,7 +25,7 @@ import java.io.Serializable;
 @Where(clause = "is_enable = true")
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-public class Student  extends BaseEntity implements Serializable {
+public class Student extends BaseEntity implements Serializable {
 
     /**
      * 用户编号
@@ -103,6 +103,11 @@ public class Student  extends BaseEntity implements Serializable {
      * 最后学历毕业时间
      */
     private java.time.LocalDate graduationDate;
+
+    /**
+     * 学制
+     */
+    private java.lang.Integer studyYear;
 
     /**
      * 最后学历毕业院校
