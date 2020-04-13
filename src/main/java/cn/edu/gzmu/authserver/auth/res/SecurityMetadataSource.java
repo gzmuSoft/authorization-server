@@ -48,6 +48,7 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
     private final @NonNull SysRoleService sysRoleService;
     private final @NonNull AuthToken authToken;
     private static final String ALL = "all";
+    private static final String ANY = "any";
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     @Override
@@ -114,10 +115,9 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
     private Boolean containIgnoreCase(Collection<String> scopes, String needScopes) {
         return scopes.stream()
                 .map(String::toUpperCase)
-                .anyMatch(needScopes::contains)
-                || scopes.stream()
-                .map(String::toUpperCase)
-                .anyMatch(scope -> scope.equalsIgnoreCase(ALL));
+                .anyMatch(scope -> needScopes.contains(scope)
+                        || scope.equalsIgnoreCase(ALL))
+                || needScopes.equalsIgnoreCase(ANY);
     }
 
     @Override

@@ -4,6 +4,6 @@
      | |_| |/ /_| |  | | |_| |_____/ ___ \ |_| | | | |  _  |
       \____/____|_|  |_|\___/     /_/   \_\___/  |_| |_| |_|
 =====================================================================
-        ${AnsiColor.BLUE} :: lesson-cloud ::      0.0.1-SNAPSHOT
-        ${AnsiColor.BRIGHT_GREEN} :: Spring Boot ::      ${spring-boot.formatted-version}
-        ${AnsiColor.RED} :: School ::             贵州民族大学
+        ${AnsiColor.BLUE} :: authorization-server ::    0.0.1-SNAPSHOT
+        ${AnsiColor.BRIGHT_GREEN} :: Spring Boot ::            ${spring-boot.formatted-version}
+        ${AnsiColor.RED} :: School ::                   贵州民族大学
