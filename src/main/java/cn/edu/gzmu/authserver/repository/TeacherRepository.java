@@ -7,6 +7,7 @@ import cn.edu.gzmu.authserver.model.entity.Teacher;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -27,5 +28,14 @@ public interface TeacherRepository extends BaseRepository<Teacher, Long> {
      */
     @RestResource(path = "byUserId")
     Optional<Teacher> findFirstByUserId(Long userId);
+
+    /**
+     * 通过 DepId 查询
+     *
+     * @param depId depId
+     * @return 列表
+     */
+    @RestResource(path = "byDepId")
+    List<Teacher> findAllByDepId(Long depId);
 
 }
