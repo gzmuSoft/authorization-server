@@ -12,9 +12,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/gzmu
+    url: jdbc:postgresql://118.24.1.170:5432/gzmu
     username: postgres
-    password: 123456
+    password: 147258369
     druid:
       filters: stat,wall,commonlogging
       web-stat-filter:
