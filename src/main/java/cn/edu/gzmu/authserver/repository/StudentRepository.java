@@ -5,6 +5,7 @@ import cn.edu.gzmu.authserver.base.BaseRepository;
 import cn.edu.gzmu.authserver.model.constant.AuthConstant;
 import cn.edu.gzmu.authserver.model.entity.Student;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,17 @@ public interface StudentRepository extends BaseRepository<Student, Long> {
      * @param userId 用户 id
      * @return 结果
      */
+    @RestResource(path = "byUserId")
     Optional<Student> findFirstByUserId(Long userId);
+
+    /**
+     * 查询在指定 user ids 的学生信息
+     *
+     * @param userIds 用户 ids
+     * @return 学生信息
+     */
+    @RestResource(path = "byUserIds")
+    List<Student> findAllByUserIdIn(List<Long> userIds);
 
     /**
      * 通过班级id查询学生

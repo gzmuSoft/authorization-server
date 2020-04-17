@@ -1,6 +1,5 @@
 package cn.edu.gzmu.authserver.repository;
 
-
 import cn.edu.gzmu.authserver.base.BaseRepository;
 import cn.edu.gzmu.authserver.model.constant.AuthConstant;
 import cn.edu.gzmu.authserver.model.entity.Teacher;
@@ -28,6 +27,15 @@ public interface TeacherRepository extends BaseRepository<Teacher, Long> {
      */
     @RestResource(path = "byUserId")
     Optional<Teacher> findFirstByUserId(Long userId);
+
+    /**
+     * 查询在指定 user ids 的教师信息
+     *
+     * @param userIds 用户 ids
+     * @return 学生信息
+     */
+    @RestResource(path = "byUserIds")
+    List<Teacher> findAllByUserIdIn(List<Long> userIds);
 
     /**
      * 通过 DepId 查询
