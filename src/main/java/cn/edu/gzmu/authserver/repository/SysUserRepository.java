@@ -7,6 +7,7 @@ import cn.edu.gzmu.authserver.model.entity.SysUser;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -19,6 +20,14 @@ import java.util.Optional;
  */
 @RepositoryRestResource(path = AuthConstant.SYS_USER)
 public interface SysUserRepository extends BaseRepository<SysUser, Long> {
+
+    /**
+     * Find All By Ids
+     *
+     * @param ids Ids
+     * @return all
+     */
+    List<SysUser> findAllByIdIn(List<Long> ids);
 
     /**
      * 通过名称查询用户，并非模糊查询。
