@@ -29,7 +29,7 @@ import static org.springframework.http.ResponseEntity.ok;
  */
 @RepositoryRestController
 @RequiredArgsConstructor
-@RequestMapping(AuthConstant.SEMESTER)
+@RequestMapping(AuthConstant.TEACHER)
 public class TeacherController {
 
     private final SysUserRepository sysUserRepository;
