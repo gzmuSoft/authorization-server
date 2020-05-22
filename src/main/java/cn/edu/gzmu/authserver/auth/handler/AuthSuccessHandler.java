@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,6 +40,7 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private RequestCache requestCache = new HttpSessionRequestCache();
     private final RedisTemplate<String, Long> longRedisTemplate;
     private static final String LOGIN_SUCCESS_API_NUMBER = "login_success_api_number";
+    private static final String AUTHORIZATION_SERVER_DATA_LOGIN_API_NUMBER = "authorization_server_data_login_api_number";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -47,7 +49,6 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         // 清除令牌操作 —— 完成
         // 最讨厌的一些东西就是某些时候解决不了，后面却可以轻松解决
         // 永远不知道第一次在写的时候想什么
-        log.debug("login ~~~~~~~~~~~~");
         ValueOperations<String, Long> operations = longRedisTemplate.opsForValue();
         final Long number = Optional.ofNullable(operations.get(LOGIN_SUCCESS_API_NUMBER)).orElse(0L);
         operations.set(LOGIN_SUCCESS_API_NUMBER, number + 1);
@@ -57,6 +58,11 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             final Long userLoginSuccess = Optional.ofNullable(operations.get(key)).orElse(0L);
             operations.set(key, userLoginSuccess + 1);
         }
+        final String dateKey = AUTHORIZATION_SERVER_DATA_LOGIN_API_NUMBER + "=" + LocalDate.now().toString();
+        final Long dataNumber = Optional.ofNullable(operations.get(dateKey)).orElse(0L);
+        operations.set(dateKey, dataNumber + 1);
+        log.debug("login ~~~~~~~~~~~~");
+        // ----------------------------------
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest == null) {
             super.onAuthenticationSuccess(request, response, authentication);
