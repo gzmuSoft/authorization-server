@@ -5,6 +5,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 登录成功处理器
@@ -34,6 +37,8 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final @NonNull Oauth2Helper oauth2Helper;
     @Setter
     private RequestCache requestCache = new HttpSessionRequestCache();
+    private final RedisTemplate<String, Long> longRedisTemplate;
+    private static final String OAUTH_API_NUMBER = "login_success_api_number";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -43,6 +48,9 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         // 最讨厌的一些东西就是某些时候解决不了，后面却可以轻松解决
         // 永远不知道第一次在写的时候想什么
         log.debug("login ~~~~~~~~~~~~");
+        ValueOperations<String, Long> operations = longRedisTemplate.opsForValue();
+        final Long number = Optional.ofNullable(operations.get(OAUTH_API_NUMBER)).orElse(0L);
+        operations.set(OAUTH_API_NUMBER, number + 1);
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest == null) {
             super.onAuthenticationSuccess(request, response, authentication);
