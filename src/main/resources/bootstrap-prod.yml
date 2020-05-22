@@ -1,0 +1,6 @@
+spring:
+  profiles: prod
+  cloud:
+    consul:
+      host: auth-consul-server-bootstrap
+      port: 8500

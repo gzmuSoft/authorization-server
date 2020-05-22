@@ -1,0 +1,6 @@
+spring:
+  profiles: dev
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
