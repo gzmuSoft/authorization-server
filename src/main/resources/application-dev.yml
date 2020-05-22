@@ -16,6 +16,9 @@ spring:
         login-username: admin
         url-pattern: /druid/*
         allow: 127.0.0.1
+  redis:
+    host: 127.0.0.1
+    password:
 logging:
   level:
     cn.edu.gzmu.authserver: debug

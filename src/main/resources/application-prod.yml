@@ -16,3 +16,6 @@ spring:
         login-username: admin
         url-pattern: /druid/*
         allow:
+  redis:
+    host: auth-redis
+    password:

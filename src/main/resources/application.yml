@@ -30,9 +30,6 @@ spring:
           socketFactory:
             class: javax.net.ssl.SSLSocketFactory
     test-connection: false
-  redis:
-    host: 127.0.0.1
-    password:
   application:
     name: gzmu-auth
   session:
