@@ -109,10 +109,10 @@ task copy(dependsOn: bootJar) {
     doLast {
         ssh.run {
             session(remotes.cloud) {
-                def result = execute 'rm -rf gzmu-auth/auth-server-*.jar'
+                def result = execute 'rm -rf gzmu-auth/authorization-server.jar'
                 println "delete exist jar ${result}"
                 println 'copy jar'
-                put from: "${buildDir.toString()}/libs/auth-server-${version}.jar", into: "/root/gzmu-auth"
+                put from: "${buildDir.toString()}/libs/authorization-server.jar", into: "/root/gzmu-auth"
                 println "copy ok"
             }
         }
