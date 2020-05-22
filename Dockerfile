@@ -9,4 +9,4 @@ RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/ /app/
 EXPOSE 8888
 
-ENTRYPOINT ["java","-jar","/app/authorization-server.jar", "-Dspring.profiles.active=prod"]
+ENTRYPOINT ["java","-jar","/app/authorization-server.jar", "--spring.profiles.active=prod"]

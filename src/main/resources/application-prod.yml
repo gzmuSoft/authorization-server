@@ -1,6 +1,18 @@
 spring:
   profiles: prod
   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://auth-db:5432/auth
     username: gzmu
     password: 147258369
+    druid:
+      filters: stat,wall,commonlogging
+      web-stat-filter:
+        enabled: true
+      stat-view-servlet:
+        enabled: true
+        login-password: 123456
+        login-username: admin
+        url-pattern: /druid/*
+        allow:
