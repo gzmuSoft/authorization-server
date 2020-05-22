@@ -93,6 +93,10 @@ test {
     useJUnitPlatform()
 }
 
+bootJar {
+    archiveFileName = "authorization-server.${archiveExtension.get()}"
+}
+
 remotes {
     cloud {
         host = '118.24.1.170'
