@@ -2,6 +2,8 @@ server:
   port: 8888
 
 spring:
+  profiles:
+    active: dev
   data:
     rest:
       base-path: /api
@@ -12,9 +14,6 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://118.24.1.170:5432/gzmu
-    username: postgres
-    password: 147258369
     druid:
       filters: stat,wall,commonlogging
       web-stat-filter:
@@ -70,7 +69,6 @@ application:
     dev: true
 logging:
   level:
-    cn.edu.gzmu.authserver: debug
     org.springframework.boot.actuate.endpoint.EndpointId: error
     org.springframework.context.support.[PostProcessorRegistrationDelegate$BeanPostProcessorChecker]: warn
   file:

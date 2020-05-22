@@ -1,0 +1,9 @@
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:postgresql://118.24.1.170:5432/gzmu
+    username: postgres
+    password: 147258369
+logging:
+  level:
+    cn.edu.gzmu.authserver: debug
