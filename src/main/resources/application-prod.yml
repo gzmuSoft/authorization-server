@@ -1,6 +1,6 @@
 spring:
   profiles: prod
   datasource:
-    url: jdbc:postgresql://auth-db:5432/gzmu
-    username: postgres
+    url: jdbc:postgresql://auth-db:5432/auth
+    username: gzmu
     password: 147258369
