@@ -38,7 +38,7 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Setter
     private RequestCache requestCache = new HttpSessionRequestCache();
     private final RedisTemplate<String, Long> longRedisTemplate;
-    private static final String OAUTH_API_NUMBER = "login_success_api_number";
+    private static final String LOGIN_SUCCESS_API_NUMBER = "login_success_api_number";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -49,8 +49,14 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         // 永远不知道第一次在写的时候想什么
         log.debug("login ~~~~~~~~~~~~");
         ValueOperations<String, Long> operations = longRedisTemplate.opsForValue();
-        final Long number = Optional.ofNullable(operations.get(OAUTH_API_NUMBER)).orElse(0L);
-        operations.set(OAUTH_API_NUMBER, number + 1);
+        final Long number = Optional.ofNullable(operations.get(LOGIN_SUCCESS_API_NUMBER)).orElse(0L);
+        operations.set(LOGIN_SUCCESS_API_NUMBER, number + 1);
+        String username = request.getParameter("username");
+        if (StringUtils.hasText(username)) {
+            final String key = "success:" + username;
+            final Long userLoginSuccess = Optional.ofNullable(operations.get(key)).orElse(0L);
+            operations.set(key, userLoginSuccess + 1);
+        }
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest == null) {
             super.onAuthenticationSuccess(request, response, authentication);
