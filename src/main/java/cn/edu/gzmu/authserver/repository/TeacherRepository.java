@@ -46,4 +46,12 @@ public interface TeacherRepository extends BaseRepository<Teacher, Long> {
     @RestResource(path = "byDepId")
     List<Teacher> findAllByDepId(Long depId);
 
+    /**
+     * 通过 SchoolId 查询
+     *
+     * @param schoolId schoolId
+     * @return 列表
+     */
+    @RestResource(path = "bySchoolId")
+    List<Teacher> findAllBySchoolId(Long schoolId);
 }
