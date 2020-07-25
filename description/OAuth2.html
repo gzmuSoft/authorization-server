@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>OAuth2 | 授权服务器</title>
+    <meta name="description" content="文档说明">
+    <meta name="generator" content="VuePress 1.4.0">
+    <link rel="apple-touch-icon" href="/authorization-server/apple-touch-icon.png">
+  <link rel="icon" href="/authorization-server/favicon-32x32.png">
+  <link rel="manifest" href="/authorization-server/manifest.json">
+  <meta name="theme-color" content="#ffffff">
+    
+    <link rel="preload" href="/authorization-server/assets/css/0.styles.7d3fa5a7.css" as="style"><link rel="preload" href="/authorization-server/assets/js/app.0a5d756e.js" as="script"><link rel="preload" href="/authorization-server/assets/js/2.d5baa89d.js" as="script"><link rel="preload" href="/authorization-server/assets/js/7.df78614d.js" as="script"><link rel="preload" href="/authorization-server/assets/js/3.12e5a52b.js" as="script"><link rel="prefetch" href="/authorization-server/assets/js/10.c5db6700.js"><link rel="prefetch" href="/authorization-server/assets/js/4.1939afcd.js"><link rel="prefetch" href="/authorization-server/assets/js/5.986e4c8a.js"><link rel="prefetch" href="/authorization-server/assets/js/6.bf00ef84.js"><link rel="prefetch" href="/authorization-server/assets/js/8.464238e7.js"><link rel="prefetch" href="/authorization-server/assets/js/9.f42c78af.js">
+    <link rel="stylesheet" href="/authorization-server/assets/css/0.styles.7d3fa5a7.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/authorization-server/" class="home-link router-link-active"><!----> <span class="site-name">授权服务器</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/authorization-server/" class="nav-link">
+  主页
+</a></div><div class="nav-item"><a href="/authorization-server/description/" class="nav-link router-link-active">
+  操作手册
+</a></div><div class="nav-item"><a href="/authorization-server/technology/" class="nav-link">
+  技术架构
+</a></div> <a href="https://github.com/gzmuSoft/authorization-server" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/authorization-server/" class="nav-link">
+  主页
+</a></div><div class="nav-item"><a href="/authorization-server/description/" class="nav-link router-link-active">
+  操作手册
+</a></div><div class="nav-item"><a href="/authorization-server/technology/" class="nav-link">
+  技术架构
+</a></div> <a href="https://github.com/gzmuSoft/authorization-server" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></nav>  <ul class="sidebar-links"><li><a href="/authorization-server/description/" class="sidebar-link">文档说明</a></li><li><a href="/authorization-server/description/OAuth2.html" class="active sidebar-link">OAuth2</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/authorization-server/description/OAuth2.html#简述" class="sidebar-link">简述</a></li><li class="sidebar-sub-header"><a href="/authorization-server/description/OAuth2.html#权限控制" class="sidebar-link">权限控制</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/authorization-server/description/OAuth2.html#不使用-scope" class="sidebar-link">不使用 scope</a></li><li class="sidebar-sub-header"><a href="/authorization-server/description/OAuth2.html#简单-scope" class="sidebar-link">简单 scope</a></li><li class="sidebar-sub-header"><a href="/authorization-server/description/OAuth2.html#复杂的-scope" class="sidebar-link">复杂的 scope</a></li><li class="sidebar-sub-header"><a href="/authorization-server/description/OAuth2.html#rbac-动态模型" class="sidebar-link">RBAC 动态模型</a></li></ul></li><li class="sidebar-sub-header"><a href="/authorization-server/description/OAuth2.html#授权模式" class="sidebar-link">授权模式</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/authorization-server/description/OAuth2.html#授权码模式" class="sidebar-link">授权码模式</a></li></ul></li></ul></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><blockquote><p>在使用之前，您还是需要对 OAuth2 开放授权协议具有一定的认识。</p></blockquote> <h2 id="简述"><a href="#简述" class="header-anchor">#</a> 简述</h2> <p>在大多数情况之下，此协议是作为第三方客户端进行接入的时候进行使用，例如 QQ 的 OAuth2 授权码流程如下：</p> <ol><li>在第三方客户端应用（例如某个社交网站，域名为 <code>example.com</code> ）点击 “使用 QQ 帐号进行登录”。</li> <li>跳转到 QQ 登录的网页，此时域名为 <code>qq.com</code>，也就是到了 QQ 的 OAuth 授权服务器之上了，这个时候输入帐号密码就是在他的网页上面进行输入的就是安全的。</li> <li>在 <code>qq.com</code> 登录成功以后，他会跳转到第三方客户端指定的一个地址，我们称之为 <strong>回调地址</strong>，同时携带一个 <strong>授权码</strong> 的参数（大多数情况下是 url 参数）。</li> <li>我们在回调地址之中获取到 <strong>授权码</strong> 参数，然后携带这个参数以及我们第三方客户端的信息（一般是客户端id和客户端密钥）去请求指定的接口获取用户的个人信息或者登录凭证。</li></ol> <p>这样一个 OAuth2 的一个第三方客户端进行授权操作就完成了。在这个过程中有如下几点好处：</p> <ol><li>保护用户账户信息安全：输入用户帐号密码的过程是在应用中完成的而不是第三方客户端那里完成的（即使用 QQ 登录时，帐号密码的输入是在 <code>qq.com</code> 的域名下完成的）</li> <li>当有新的客户端接入时变得极其容易，只需要添加客户端的信息即可。</li> <li>有效管理客户端权限：例如某些客户端只能够读取用户信息而不能够修改用户信息，完全可以通过使用客户端 id 进行具体的接口、权限管理</li></ol> <h2 id="权限控制"><a href="#权限控制" class="header-anchor">#</a> 权限控制</h2> <p>那么在 OAuth2 我们如何来进行用户的权限管理和权限鉴定呢？在一般情况下，可以用通过 <code>scope</code> 来完成这么一个过程。</p> <blockquote><p><code>scope</code> 可以简单可以复杂也可以完全没有。</p></blockquote> <h3 id="不使用-scope"><a href="#不使用-scope" class="header-anchor">#</a> 不使用 scope</h3> <p>不使用 scope 意味着你所有的资源都是开放的，在这种情况下一般都是只提供 <strong>读取</strong> 接口，例如允许某个第三方客户端读取用户信息、角色信息等。</p> <ul><li>好处：简单、快捷</li> <li>坏处：只能读取无法修改</li></ul> <h3 id="简单-scope"><a href="#简单-scope" class="header-anchor">#</a> 简单 scope</h3> <p>简单的 <code>scope</code> 一般就只提供几种描述动作的操作符，最为常见的是 <code>READ</code>、<code>WRITE</code>、<code>ALL</code>；通过第三方客户端接入，每个客户端可以获取到不同的权限。</p> <p>例如： A 应用可以修改用户的信息，其申请的 <code>scope</code> 应该为 <code>WRITE</code>，B 应用只能够读取用户信息，其申请的 <code>scope</code> 应该位 <code>READ</code>。</p> <ul><li>好处：简单的资源操作控制</li> <li>坏处：没有对资源的具体操作限制</li></ul> <h3 id="复杂的-scope"><a href="#复杂的-scope" class="header-anchor">#</a> 复杂的 scope</h3> <p>复杂的 <code>scope</code> 就涉及到对于某个资源的详细控制，可以把它看成 <code>ACL</code> 权限控制。</p> <ul><li>比如 <code>message:READ</code> 表示对 <code>message</code> 的资源具有 <code>READ</code> 权限</li> <li>比如 <code>user:WRITE</code> 表示对 <code>user</code> 的资源具有 <code>WRITE</code> 权限</li></ul> <p>这样的权限控制基本覆盖大多数的使用情况</p> <ul><li>好处：详细的资源权限控制</li> <li>坏处：实现具有一定难度，不可动态修改，灵活性较低</li></ul> <h3 id="rbac-动态模型"><a href="#rbac-动态模型" class="header-anchor">#</a> RBAC 动态模型</h3> <p>在我们的应用中，涉及到了一个最为重要的东西：<strong>角色（ROLE）</strong>。我们使用 <strong>RBAC(Role-based access control)</strong> 进行我们的权限管理。</p> <p><img src="/images/rbac.png" alt="rbac"></p> <p>所以在使用 <code>scope</code> 的情况对我们来说是不适用的，这种情况下我们如何去管理权限呢？我更希望使用 OAuth2 来完全的管理我们的用户角色等信息而不是再去引入一些其他的东西，我将它与 RBAC 授权模型进行搭配使用。如何做呢？</p> <ol><li>授权服务器的资源只提供 <strong>读</strong> 权限，所有的客户端只能够读取用户的信息，而不能够修改任何信息。</li> <li>下发令牌时，提供用户用的 <code>scope</code> 信息以外的 <code>ROLE</code> 信息。</li> <li>提供一个独立客户端专门来进行修改授权服务器的资源，即：<strong>授权中心</strong>。</li></ol> <p>角色我们会给客户端，那么图中的 <strong>资源</strong> 应该是什么呢？那应该是第三方客户端的资源，由第三方客户端自己掌控。</p> <p>换句话说，第三方客户端可以很自由的选择权限控制方式。</p> <ol><li>使用 <code>scope</code>：我们不使用 <code>scope</code> 但是不代表第三方客户端不能使用，在客户端足够简单的情况下，可以使用 <code>scope</code> 来对你的应用进行权限控制。</li> <li>使用 <code>role</code>：在应用使用的时候，我们会下发给客户端用户的角色信息，客户端完全可以使用他进行 RBAC 权限控制</li> <li>使用自己的用户系统：如果你想完全脱离我们的应用使用，完全可以在得到我们给予的用户信息以后，自己创建用户并使用一套新的用户管理系统，这个也是 OAuth2 最为本质的使用方式。</li></ol> <h2 id="授权模式"><a href="#授权模式" class="header-anchor">#</a> 授权模式</h2> <p>前面我们提到的 QQ 的栗子就是授权模式中的授权码模式。在我们的授权服务器中提供四种授权模式：</p> <ol><li>授权码模式</li> <li>密码模式</li> <li>手机验证码模式</li> <li>邮箱验证码模式</li></ol> <p>对于不同的模式</p> <ul><li>安全级别： 1 &gt; 3 &gt; 4 &gt; 2</li> <li>复杂级别： 1 &gt; 3 = 4 &gt; 2</li> <li>上手难度： 1 &gt; 2 = 3 = 4</li> <li>推荐指数： 1 &gt; 2 &gt; 3 = 4</li></ul> <h3 id="授权码模式"><a href="#授权码模式" class="header-anchor">#</a> 授权码模式</h3> <div class="language-text extra-class"><pre class="language-text"><code>
+     +----------+
+     | Resource |
+     |   Owner  |
+     |          |
+     +----------+
+          ^
+          |
+         (B)
+     +----|-----+          Client Identifier      +---------------+
+     |         -+----(A)-- &amp; Redirection URI ----&gt;|               |
+     |  User-   |                                 | Authorization |
+     |  Agent  -+----(B)-- User authenticates ---&gt;|     Server    |
+     |          |                                 |               |
+     |         -+----(C)-- Authorization Code ---&lt;|               |
+     +-|----|---+                                 +---------------+
+       |    |                                         ^      v
+      (A)  (C)                                        |      |
+       |    |                                         |      |
+       ^    v                                         |      |
+     +---------+                                      |      |
+     |         |&gt;---(D)-- Authorization Code ---------'      |
+     |  Client |          &amp; Redirection URI                  |
+     |         |                                             |
+     |         |&lt;---(E)----- Access Token -------------------'
+     +---------+       (w/ Optional Refresh Token)
+
+
+   Note: The lines illustrating steps (A), (B), and (C) are broken into
+   two parts as they pass through the user-agent.
+
+</code></pre></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/gzmuSoft/authorization-server/edit/master/docs/description/OAuth2.md" target="_blank" rel="noopener noreferrer">帮助我们改进此文档！</a> <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></div> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">7/25/2020, 8:55:01 AM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/authorization-server/description/" class="prev router-link-active">
+        文档说明
+      </a></span> <!----></p></div> </main></div><div class="global-ui"><!----><!----></div></div>
+    <script src="/authorization-server/assets/js/app.0a5d756e.js" defer></script><script src="/authorization-server/assets/js/2.d5baa89d.js" defer></script><script src="/authorization-server/assets/js/7.df78614d.js" defer></script><script src="/authorization-server/assets/js/3.12e5a52b.js" defer></script>
+  </body>
+</html>
