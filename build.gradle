@@ -52,7 +52,7 @@ dependencies {
             'com.alibaba:druid-spring-boot-starter:1.1.21',
             'com.alibaba:fastjson:1.2.62',
             'com.alibaba:druid:1.1.21',
-            'org.jetbrains:annotations:18.0.0'
+            'org.jetbrains:annotations:20.0.0'
     )
     implementation(
             'com.github.ben-manes.caffeine:caffeine',
